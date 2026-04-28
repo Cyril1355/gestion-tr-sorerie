@@ -1,6 +1,7 @@
 let db;
 const moisLabels = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 
+// Initialisation de la base de données
 const request = indexedDB.open("FreelanceExpertDB", 1);
 request.onupgradeneeded = e => {
     db = e.target.result;
@@ -15,6 +16,7 @@ async function renderApp() {
     const settingsStore = tx.objectStore("settings");
     const financeStore = tx.objectStore("finance");
 
+    // Chargement des paramètres
     const conf = await new Promise(r => settingsStore.get("config").onsuccess = e => r(e.target.result));
     const isTvaForced = conf ? conf.tvaForced : false;
 
@@ -26,6 +28,7 @@ async function renderApp() {
         if(document.getElementById('tvaForce')) document.getElementById('tvaForce').checked = isTvaForced;
     }
 
+    // Chargement du Logo
     const logo = await new Promise(r => settingsStore.get("logo").onsuccess = e => r(e.target.result));
     if (logo && logo.src) {
         const img = document.getElementById('logo-img');
@@ -36,6 +39,8 @@ async function renderApp() {
     let html = "";
     let netArray = [];
     let cumulCA = 0;
+    
+    // Initialisation des totaux annuels
     let tCA = 0, tTVA = 0, tURSSAF = 0, tFrais = 0, tNet = 0;
 
     for (let i = 0; i < 12; i++) {
@@ -57,6 +62,7 @@ async function renderApp() {
         let urssaf = (row.ca - tvaMois) * 0.211;
         let net = row.ca - tvaMois - urssaf - row.frais;
         
+        // Calcul des totaux pour le pied de page
         tCA += row.ca; tTVA += tvaMois; tURSSAF += urssaf; tFrais += row.frais; tNet += net;
         netArray.push(net.toFixed(2));
 
@@ -70,9 +76,12 @@ async function renderApp() {
         </tr>`;
     }
 
+    // Mise à jour du corps du tableau
     document.getElementById('tbody').innerHTML = html;
+
+    // Mise à jour de la ligne TOTAL ANNUEL
     document.getElementById('tfoot').innerHTML = `
-        <tr style="background: rgba(52, 73, 94, 0.1); font-weight: bold;">
+        <tr style="background: rgba(52, 73, 94, 0.1); font-weight: bold; border-top: 2px solid #34495e;">
             <td>TOTAL ANNUEL</td>
             <td>${tCA.toFixed(2)} €</td>
             <td style="color: #e74c3c">${tTVA.toFixed(2)} €</td>
@@ -117,9 +126,20 @@ function drawChart(data) {
         type: 'line',
         data: { 
             labels: moisLabels.map(m => m.substring(0, 3)), 
-            datasets: [{ label: 'Bénéfice Net (€)', data: data, borderColor: '#27ae60', backgroundColor: 'rgba(39,174,96,0.1)', fill: true, tension: 0.3 }] 
+            datasets: [{ 
+                label: 'Bénéfice Net (€)', 
+                data: data, 
+                borderColor: '#27ae60', 
+                backgroundColor: 'rgba(39,174,96,0.1)', 
+                fill: true, 
+                tension: 0.3 
+            }] 
         },
-        options: { responsive: true, maintainAspectRatio: false }
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true } }
+        }
     });
 }
 
@@ -129,11 +149,13 @@ function toggleTheme() {
 }
 
 function exporterPDF() {
+    // On cache les outils pour un PDF propre
     document.getElementById('admin-tools').style.display = 'none';
     const element = document.getElementById('app-body');
     const opt = {
         margin: [10, 10],
-        filename: `Rapport_${document.getElementById('name-display').innerText}.pdf`,
+        filename: `Rapport_${document.getElementById('name-display').innerText}_2026.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, backgroundColor: '#ffffff' },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
     };
@@ -166,3 +188,5 @@ function importData(input) {
     };
     reader.readAsDataURL(input.files[0]);
 }
+
+window.onbeforeunload = () => "Pensez à faire un Backup avant de quitter !";
