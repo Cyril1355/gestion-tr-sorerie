@@ -25,9 +25,16 @@
         </div>
 
         <div class="toolbar" id="admin-tools">
-            <input type="text" id="inName" placeholder="Entreprise" oninput="saveConfig()">
+            <input type="text" id="inName" placeholder="Nom Entreprise" oninput="saveConfig()">
             <input type="text" id="inSiret" placeholder="SIRET" oninput="saveConfig()">
+            
+            <label style="font-size: 0.85em; display: flex; align-items: center; gap: 6px; cursor: pointer; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 4px; border: 1px solid #ddd;">
+                <input type="checkbox" id="tvaForce" onchange="saveConfig()"> 
+                <strong>TVA dès 1€</strong>
+            </label>
+
             <input type="file" id="logoFile" accept="image/*" onchange="saveLogo(this)" style="font-size: 0.7em;">
+            
             <div style="margin-left: auto; display:flex; gap:5px;">
                 <button class="btn btn-backup" onclick="exportData()">💾 Backup</button>
                 <button class="btn btn-backup" style="background:#8e44ad" onclick="document.getElementById('importFile').click()">📂 Importer</button>
@@ -43,7 +50,7 @@
                             <th>Mois</th>
                             <th>CA Brut (€)</th>
                             <th>TVA (20%)</th>
-                            <th>URSSAF</th>
+                            <th>URSSAF (21.1%)</th>
                             <th>Frais (€)</th>
                             <th>Net Réel</th>
                         </tr>
