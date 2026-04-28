@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Trésorerie - Dashboard Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container" id="app-body">
+        <div class="header-pro">
+            <div class="logo-area">
+                <img id="logo-img" src="" style="display:none;">
+                <div>
+                    <h2 id="name-display" style="margin:0">Ma Trésorerie</h2>
+                    <small id="siret-display" style="opacity:0.7">SIRET : -</small>
+                </div>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button class="btn btn-theme" onclick="toggleTheme()">🌓</button>
+                <button class="btn btn-pdf" onclick="exporterPDF()">Rapport PDF</button>
+            </div>
+        </div>
+
+        <div class="toolbar" id="admin-tools">
+            <input type="text" id="inName" placeholder="Entreprise" oninput="saveConfig()">
+            <input type="text" id="inSiret" placeholder="SIRET" oninput="saveConfig()">
+            <input type="file" id="logoFile" accept="image/*" onchange="saveLogo(this)" style="font-size: 0.7em;">
+            <div style="margin-left: auto; display:flex; gap:5px;">
+                <button class="btn btn-backup" onclick="exportData()">💾 Backup</button>
+                <button class="btn btn-backup" style="background:#8e44ad" onclick="document.getElementById('importFile').click()">📂 Importer</button>
+                <input type="file" id="importFile" hidden onchange="importData(this)">
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <div class="table-section">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mois</th>
+                            <th>CA Brut (€)</th>
+                            <th>TVA (20%)</th>
+                            <th>URSSAF</th>
+                            <th>Frais (€)</th>
+                            <th>Net Réel</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+            <div class="chart-section">
+                <canvas id="mainChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
