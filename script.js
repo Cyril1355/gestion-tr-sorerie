@@ -1,39 +1,21 @@
 let db;
 const moisLabels = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 
-// Initialisation sécurisée de la base de données
 const request = indexedDB.open("FreelanceExpertDB", 1);
-
 request.onupgradeneeded = e => {
     db = e.target.result;
     if (!db.objectStoreNames.contains("finance")) db.createObjectStore("finance", { keyPath: "id" });
     if (!db.objectStoreNames.contains("settings")) db.createObjectStore("settings", { keyPath: "id" });
 };
-
-request.onsuccess = e => {
-    db = e.target.result;
-    console.log("Base de données prête");
-    renderApp();
-};
-
-request.onerror = e => {
-    console.error("Erreur IndexedDB", e);
-    alert("Erreur de base de données. Essayez de rafraîchir la page.");
-};
+request.onsuccess = e => { db = e.target.result; renderApp(); };
 
 async function renderApp() {
     if (!db) return;
-
     const tx = db.transaction(["finance", "settings"], "readonly");
     const settingsStore = tx.objectStore("settings");
     const financeStore = tx.objectStore("finance");
 
-    // 1. Récupération des réglages (Nom, SIRET, TVA)
-    const conf = await new Promise(r => {
-        const req = settingsStore.get("config");
-        req.onsuccess = () => r(req.result);
-    });
-
+    const conf = await new Promise(r => settingsStore.get("config").onsuccess = e => r(e.target.result));
     const isTvaForced = conf ? conf.tvaForced : false;
 
     if (conf) {
@@ -44,27 +26,22 @@ async function renderApp() {
         if(document.getElementById('tvaForce')) document.getElementById('tvaForce').checked = isTvaForced;
     }
 
-    // 2. Récupération du Logo
-    const logo = await new Promise(r => {
-        const req = settingsStore.get("logo");
-        req.onsuccess = () => r(req.result);
-    });
+    const logo = await new Promise(r => settingsStore.get("logo").onsuccess = e => r(e.target.result));
     if (logo && logo.src) {
         const img = document.getElementById('logo-img');
         img.src = logo.src;
         img.style.display = "block";
     }
 
-    // 3. Construction du tableau et calculs
     let html = "";
-    let cumulCA = 0;
     let netArray = [];
+    let cumulCA = 0;
+    
+    // Variables pour le Total Annuel
+    let totalCA = 0, totalTVA = 0, totalURSSAF = 0, totalFrais = 0, totalNet = 0;
 
     for (let i = 0; i < 12; i++) {
-        const row = await new Promise(r => {
-            const req = financeStore.get(i);
-            req.onsuccess = () => r(req.result);
-        }) || { ca: 0, frais: 0 };
+        const row = await new Promise(r => financeStore.get(i).onsuccess = e => r(e.target.result)) || { ca: 0, frais: 0 };
 
         let tvaMois = 0;
         if (isTvaForced) {
@@ -81,6 +58,9 @@ async function renderApp() {
         cumulCA += row.ca;
         let urssaf = (row.ca - tvaMois) * 0.211;
         let net = row.ca - tvaMois - urssaf - row.frais;
+        
+        // Accumulation des totaux
+        totalCA += row.ca; totalTVA += tvaMois; totalURSSAF += urssaf; totalFrais += row.frais; totalNet += net;
         netArray.push(net.toFixed(2));
 
         html += `<tr>
@@ -94,6 +74,18 @@ async function renderApp() {
     }
 
     document.getElementById('tbody').innerHTML = html;
+    
+    // Affichage du Pied de Page (Totaux)
+    document.getElementById('tfoot').innerHTML = `
+        <tr>
+            <td>TOTAL ANNUEL</td>
+            <td>${totalCA.toFixed(2)} €</td>
+            <td style="color: #e74c3c">${totalTVA.toFixed(2)} €</td>
+            <td>${totalURSSAF.toFixed(2)} €</td>
+            <td>${totalFrais.toFixed(2)} €</td>
+            <td style="color: #27ae60; font-size: 1.1em;">${totalNet.toFixed(2)} €</td>
+        </tr>`;
+
     drawChart(netArray);
 }
 
@@ -124,22 +116,13 @@ function saveLogo(input) {
 }
 
 function drawChart(data) {
-    const canvas = document.getElementById('mainChart');
-    if(!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = document.getElementById('mainChart').getContext('2d');
     if (window.chart) window.chart.destroy();
     window.chart = new Chart(ctx, {
         type: 'line',
         data: { 
             labels: moisLabels.map(m => m.substring(0, 3)), 
-            datasets: [{ 
-                label: 'Bénéfice Net (€)', 
-                data: data, 
-                borderColor: '#27ae60', 
-                backgroundColor: 'rgba(39,174,96,0.1)', 
-                fill: true, 
-                tension: 0.3 
-            }] 
+            datasets: [{ label: 'Bénéfice Net (€)', data: data, borderColor: '#27ae60', backgroundColor: 'rgba(39,174,96,0.1)', fill: true, tension: 0.3 }] 
         },
         options: { responsive: true, maintainAspectRatio: false }
     });
@@ -184,7 +167,9 @@ function importData(input) {
         const tx = db.transaction(["finance", "settings"], "readwrite");
         if(data.finance) data.finance.forEach(row => tx.objectStore("finance").put(row));
         if(data.settings) data.settings.forEach(row => tx.objectStore("settings").put(row));
-        tx.oncomplete = () => { renderApp(); alert("Importation réussie !"); };
+        tx.oncomplete = () => { renderApp(); alert("Données importées avec succès !"); };
     };
     reader.readAsDataURL(input.files[0]);
 }
+
+window.onbeforeunload = () => "Pensez à exporter vos données si vous changez de PC.";
