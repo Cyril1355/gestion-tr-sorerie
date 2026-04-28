@@ -36,9 +36,7 @@ async function renderApp() {
     let html = "";
     let netArray = [];
     let cumulCA = 0;
-    
-    // Variables pour le Total Annuel
-    let totalCA = 0, totalTVA = 0, totalURSSAF = 0, totalFrais = 0, totalNet = 0;
+    let tCA = 0, tTVA = 0, tURSSAF = 0, tFrais = 0, tNet = 0;
 
     for (let i = 0; i < 12; i++) {
         const row = await new Promise(r => financeStore.get(i).onsuccess = e => r(e.target.result)) || { ca: 0, frais: 0 };
@@ -59,8 +57,7 @@ async function renderApp() {
         let urssaf = (row.ca - tvaMois) * 0.211;
         let net = row.ca - tvaMois - urssaf - row.frais;
         
-        // Accumulation des totaux
-        totalCA += row.ca; totalTVA += tvaMois; totalURSSAF += urssaf; totalFrais += row.frais; totalNet += net;
+        tCA += row.ca; tTVA += tvaMois; tURSSAF += urssaf; tFrais += row.frais; tNet += net;
         netArray.push(net.toFixed(2));
 
         html += `<tr>
@@ -74,16 +71,14 @@ async function renderApp() {
     }
 
     document.getElementById('tbody').innerHTML = html;
-    
-    // Affichage du Pied de Page (Totaux)
     document.getElementById('tfoot').innerHTML = `
-        <tr>
+        <tr style="background: rgba(52, 73, 94, 0.1); font-weight: bold;">
             <td>TOTAL ANNUEL</td>
-            <td>${totalCA.toFixed(2)} €</td>
-            <td style="color: #e74c3c">${totalTVA.toFixed(2)} €</td>
-            <td>${totalURSSAF.toFixed(2)} €</td>
-            <td>${totalFrais.toFixed(2)} €</td>
-            <td style="color: #27ae60; font-size: 1.1em;">${totalNet.toFixed(2)} €</td>
+            <td>${tCA.toFixed(2)} €</td>
+            <td style="color: #e74c3c">${tTVA.toFixed(2)} €</td>
+            <td>${tURSSAF.toFixed(2)} €</td>
+            <td>${tFrais.toFixed(2)} €</td>
+            <td style="color: #27ae60; font-size: 1.1em;">${tNet.toFixed(2)} €</td>
         </tr>`;
 
     drawChart(netArray);
@@ -98,7 +93,7 @@ function updateEntry(id, ca, frais) {
 function saveConfig() {
     const name = document.getElementById('inName').value;
     const siret = document.getElementById('inSiret').value;
-    const tvaForced = document.getElementById('tvaForce') ? document.getElementById('tvaForce').checked : false;
+    const tvaForced = document.getElementById('tvaForce').checked;
     const tx = db.transaction("settings", "readwrite");
     tx.objectStore("settings").put({ id: "config", name, siret, tvaForced });
     tx.oncomplete = () => renderApp();
@@ -167,9 +162,7 @@ function importData(input) {
         const tx = db.transaction(["finance", "settings"], "readwrite");
         if(data.finance) data.finance.forEach(row => tx.objectStore("finance").put(row));
         if(data.settings) data.settings.forEach(row => tx.objectStore("settings").put(row));
-        tx.oncomplete = () => { renderApp(); alert("Données importées avec succès !"); };
+        tx.oncomplete = () => { renderApp(); alert("Importation réussie !"); };
     };
     reader.readAsDataURL(input.files[0]);
 }
-
-window.onbeforeunload = () => "Pensez à exporter vos données si vous changez de PC.";
