@@ -2,48 +2,53 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Expert Trésorerie - Dashboard Pro</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
-<body>
-    <div class="container" id="app-body">
-        <div class="header-pro">
-            <div class="logo-area">
-                <img id="logo-img" src="" style="display:none; max-height: 50px; margin-right: 15px;">
+<body id="app-body">
+
+    <div class="container">
+        <header class="header-pro">
+            <div class="logo-area" style="display: flex; align-items: center; gap: 15px;">
+                <img id="logo-img" src="" alt="Logo" style="display:none; max-height: 50px; border-radius: 4px;">
                 <div>
-                    <h2 id="name-display" style="margin:0">Ma Trésorerie</h2>
-                    <small id="siret-display" style="opacity:0.7">SIRET : -</small>
+                    <h1 id="name-display" style="margin:0; font-size: 1.5rem;">Ma Trésorerie</h1>
+                    <small id="siret-display" style="color: #666;">SIRET : -</small>
                 </div>
             </div>
-            <div style="display:flex; gap:8px;">
-                <button class="btn btn-theme" onclick="toggleTheme()">🌓</button>
+            <div class="main-actions">
+                <button class="btn btn-theme" onclick="toggleTheme()" title="Changer de mode">🌓</button>
                 <button class="btn btn-pdf" onclick="exporterPDF()">Rapport PDF</button>
             </div>
-        </div>
+        </header>
 
-        <div class="toolbar" id="admin-tools">
-            <input type="text" id="inName" placeholder="Nom Entreprise" oninput="saveConfig()">
-            <input type="text" id="inSiret" placeholder="SIRET" oninput="saveConfig()">
+        <section class="toolbar">
+            <input type="text" id="inName" placeholder="Nom Entreprise">
+            <input type="text" id="inSiret" placeholder="SIRET">
             
-            <label class="tva-label" style="font-size: 0.85em; display: flex; align-items: center; gap: 6px; cursor: pointer; background: #fff; padding: 5px 10px; border-radius: 4px; border: 1px solid #ddd; color:#333;">
-                <input type="checkbox" id="tvaForce" onchange="saveConfig()"> 
-                <strong>TVA dès 1€</strong>
+            <label class="tva-label">
+                <input type="checkbox" id="tvaForce"> &nbsp; TVA dès 1€
             </label>
 
-            <input type="file" id="logoFile" accept="image/*" onchange="saveLogo(this)" style="font-size: 0.7em;">
+            <button class="btn btn-theme" onclick="saveConfig()" style="background: #27ae60;">Enregistrer</button>
             
-            <div style="margin-left: auto; display:flex; gap:5px;">
+            <div style="flex-grow: 1;"></div> <div class="file-actions" style="display: flex; gap: 5px; flex-wrap: wrap;">
+                <input type="file" id="logoInput" onchange="saveLogo(this)" style="display:none">
+                <button class="btn" onclick="document.getElementById('logoInput').click()" style="background: #95a5a6; font-size: 0.8rem;">Logo</button>
+                
                 <button class="btn btn-backup" onclick="exportData()">💾 Backup</button>
-                <button class="btn btn-backup" style="background:#8e44ad" onclick="document.getElementById('importFile').click()">📂 Importer</button>
-                <input type="file" id="importFile" hidden onchange="importData(this)">
+                
+                <input type="file" id="importInput" onchange="importData(this)" style="display:none">
+                <button class="btn" onclick="document.getElementById('importInput').click()" style="background: #9b59b6;">📂 Importer</button>
             </div>
-        </div>
+        </section>
 
-        <div class="main-layout">
-            <div class="table-section">
+        <main class="main-layout">
+            
+            <section class="table-section">
                 <table>
                     <thead>
                         <tr>
@@ -55,24 +60,29 @@
                             <th>Net Réel</th>
                         </tr>
                     </thead>
-                    <tbody id="tbody"></tbody>
-                    <tfoot id="tfoot"></tfoot>
+                    <tbody id="tbody">
+                        </tbody>
+                    <tfoot id="tfoot">
+                        </tfoot>
                 </table>
-            </div>
-            <div class="chart-section">
-                <canvas id="mainChart"></canvas>
-            </div>
-        </div>
+            </section>
 
-        <div class="legal-notice" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 0.75em; opacity: 0.6; line-height: 1.4; color: var(--text); font-style: italic;">
-            <p style="margin-bottom: 10px;"><strong>Mentions Légales & Confidentialité :</strong></p>
-            <ul style="list-style-type: none; padding: 0;">
-                <li style="margin-bottom: 5px;">• <strong>Confidentialité :</strong> Aucune donnée saisie n'est transmise à un serveur. Vos informations sont stockées exclusivement dans votre navigateur.</li>
-                <li style="margin-bottom: 5px;">• <strong>Responsabilité :</strong> Cet outil est une aide au calcul et ne remplace pas un expert-comptable ou vos déclarations officielles (URSSAF/Impôts).</li>
-                <li style="margin-bottom: 5px;">• <strong>Sauvegarde :</strong> La sécurité de vos données dépend de votre navigateur. Utilisez régulièrement la fonction "Backup" (export JSON).</li>
+            <section class="chart-section">
+                <canvas id="mainChart"></canvas>
+            </section>
+
+        </main>
+
+        <footer class="legal-notice" style="margin-top: 30px; font-size: 0.75rem; color: #888; border-top: 1px solid #eee; padding-top: 15px;">
+            <p><strong>Mentions Légales & Confidentialité :</strong></p>
+            <ul>
+                <li><strong>Confidentialité :</strong> Aucune donnée saisie n'est transmise à un serveur. Vos informations sont stockées exclusivement dans votre navigateur.</li>
+                <li><strong>Responsabilité :</strong> Cet outil est une aide au calcul et ne remplace pas un expert-comptable ou vos déclarations officielles (URSSAF/Impôts).</li>
+                <li><strong>Sauvegarde :</strong> La sécurité de vos données dépend de votre navigateur. Utilisez régulièrement la fonction "Backup" (export JSON).</li>
             </ul>
-        </div>
+        </footer>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
