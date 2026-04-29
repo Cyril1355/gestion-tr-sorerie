@@ -99,87 +99,54 @@ function toggleTheme() {
 }
 
 function exporterPDF() {
-    console.log("Génération du rapport PDF haute précision...");
     const element = document.getElementById('app-body');
     
-    // 1. Création d'un style temporaire pour calibrer le PDF
+    // Création du style correcteur
     const style = document.createElement('style');
     style.innerHTML = `
-        /* Configuration de la zone d'impression A4 */
-        #app-body {
-            width: 190mm !important; /* On laisse de la marge pour le PDF */
-            margin: 0 auto !important;
-            padding: 0 !important;
-            font-family: Arial, sans-serif !important;
+        /* On force la structure à s'empiler verticalement */
+        .main-layout { 
+            display: flex !important; 
+            flex-direction: column !important; 
+            align-items: center !important;
+        }
+        
+        /* On s'assure que les deux sections prennent toute la largeur */
+        .table-section, .chart-section { 
+            width: 100% !important; 
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 10px 0 !important;
         }
 
-        /* Masquage des éléments interactifs */
-        .toolbar, .main-actions, .btn, .config-inputs, .legal-notice { 
+        /* Saut de page automatique pour éviter de couper le graphique */
+        .chart-section { 
+            page-break-before: always !important; 
+        }
+
+        /* On cache les boutons et réglages sur le PDF */
+        .toolbar, .main-actions, .btn, .config-inputs { 
             display: none !important; 
         }
 
-        /* Ajustement du tableau pour éviter de couper la droite */
-        table {
-            width: 100% !important;
-            table-layout: fixed !important;
-            border-collapse: collapse !important;
-            font-size: 9px !important; /* Taille réduite pour faire tenir toutes les colonnes */
-        }
-
-        th, td {
-            padding: 4px 2px !important;
-            border: 1px solid #ddd !important;
-            word-wrap: break-word !important;
-        }
-
-        /* Ajustement des inputs dans le tableau */
-        input {
-            width: 95% !important;
-            border: none !important;
-            background: transparent !important;
-            font-size: 9px !important;
-        }
-
-        /* Gestion des sauts de page */
-        .table-section { 
+        /* On ajuste la taille du tableau pour qu'il ne déborde pas à droite */
+        table { 
             width: 100% !important; 
-            page-break-after: always !important; 
-            margin-bottom: 0 !important;
-        }
-
-        .chart-section { 
-            width: 100% !important; 
-            display: block !important;
-            page-break-before: always !important;
-            padding-top: 20px !important;
-        }
-
-        canvas { 
-            max-width: 100% !important; 
-            height: auto !important; 
+            font-size: 10px !important; 
         }
     `;
     document.head.appendChild(style);
 
-    // 2. Options de conversion
     const opt = {
-        margin: [10, 10],
-        filename: 'Rapport_Tresorerie_Complet.pdf',
+        margin: [10, 5],
+        filename: 'Ma_Tresorerie_Rapport.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-            scale: 2, 
-            useCORS: true, 
-            logging: false,
-            width: 800 // On force une largeur de capture stable
-        },
+        html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    // 3. Génération
     html2pdf().set(opt).from(element).save().then(() => {
-        // 4. Nettoyage après export
-        style.remove();
-        console.log("PDF exporté avec succès.");
+        style.remove(); // On retire le style après l'export pour retrouver l'affichage normal
     });
 }
 
