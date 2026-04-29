@@ -67,14 +67,36 @@ canvas {
 
 /* Optimisation spécifique pour le PDF */
 @media print {
-    .main-layout {
-        display: block !important;
+    /* On cache tout ce qui n'est pas du contenu (boutons, formulaires de saisie) */
+    .toolbar, .main-actions, .btn, .config-inputs {
+        display: none !important;
     }
+
+    /* Le tableau prend toute la largeur */
+    .table-section {
+        width: 100% !important;
+        page-break-after: auto;
+    }
+
+    /* FORCE LE GRAPHIQUE SUR UNE NOUVELLE PAGE */
     .chart-section {
-        page-break-before: always; /* Met le graphique sur une 2ème page si besoin */
-        margin-top: 20px;
+        display: block !important;
+        width: 100% !important;
+        page-break-before: always; /* Force le saut de page avant le graphique */
+        margin-top: 50px;
+        padding-top: 20px;
     }
-    .toolbar, .main-actions, .btn {
-        display: none !important; /* Cache les boutons sur le PDF */
+
+    /* Empêche le tableau d'être coupé au milieu d'une ligne */
+    tr {
+        page-break-inside: avoid;
+    }
+
+    .container {
+        box-shadow: none !important;
+        border: none !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 }
