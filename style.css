@@ -58,3 +58,23 @@ th { background: var(--primary); color: white; }
 .btn-pdf { background: var(--danger); }
 .btn-theme { background: var(--primary); }
 .btn-backup { background: #3498db; }
+
+/* Empêche le graphique de flotter lors de l'export */
+canvas {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* Optimisation spécifique pour le PDF */
+@media print {
+    .main-layout {
+        display: block !important;
+    }
+    .chart-section {
+        page-break-before: always; /* Met le graphique sur une 2ème page si besoin */
+        margin-top: 20px;
+    }
+    .toolbar, .main-actions, .btn {
+        display: none !important; /* Cache les boutons sur le PDF */
+    }
+}
