@@ -20,27 +20,26 @@
                 </div>
             </div>
             <div class="main-actions">
-                <button class="btn btn-theme" onclick="toggleTheme()" title="Changer de mode">🌓</button>
+                <button class="btn btn-theme" onclick="toggleTheme()" title="Changer de mode">🌓 Mode</button>
                 <button class="btn btn-pdf" onclick="exporterPDF()">Rapport PDF</button>
             </div>
         </header>
 
         <section class="toolbar">
-            <input type="text" id="inName" placeholder="Nom Entreprise">
-            <input type="text" id="inSiret" placeholder="SIRET">
+            <div class="config-inputs" style="display: flex; gap: 10px; flex-wrap: wrap; flex: 2;">
+                <input type="text" id="inName" placeholder="Nom Entreprise">
+                <input type="text" id="inSiret" placeholder="SIRET">
+                <label class="tva-label" style="display: flex; align-items: center; gap: 5px; background: white; padding: 0 10px; border: 1px solid #ccc; border-radius: 6px;">
+                    <input type="checkbox" id="tvaForce"> TVA dès 1€
+                </label>
+                <button class="btn" onclick="saveConfig()" style="background: #27ae60;">Enregistrer</button>
+            </div>
             
-            <label class="tva-label">
-                <input type="checkbox" id="tvaForce"> &nbsp; TVA dès 1€
-            </label>
-
-            <button class="btn btn-theme" onclick="saveConfig()" style="background: #27ae60;">Enregistrer</button>
-            
-            <div style="flex-grow: 1;"></div> <div class="file-actions" style="display: flex; gap: 5px; flex-wrap: wrap;">
+            <div class="data-actions" style="display: flex; gap: 10px; flex-wrap: wrap; flex: 1; justify-content: flex-end;">
                 <input type="file" id="logoInput" onchange="saveLogo(this)" style="display:none">
-                <button class="btn" onclick="document.getElementById('logoInput').click()" style="background: #95a5a6; font-size: 0.8rem;">Logo</button>
+                <button class="btn" onclick="document.getElementById('logoInput').click()" style="background: #95a5a6;">Logo</button>
                 
                 <button class="btn btn-backup" onclick="exportData()">💾 Backup</button>
-                
                 <input type="file" id="importInput" onchange="importData(this)" style="display:none">
                 <button class="btn" onclick="document.getElementById('importInput').click()" style="background: #9b59b6;">📂 Importer</button>
             </div>
@@ -73,13 +72,9 @@
 
         </main>
 
-        <footer class="legal-notice" style="margin-top: 30px; font-size: 0.75rem; color: #888; border-top: 1px solid #eee; padding-top: 15px;">
-            <p><strong>Mentions Légales & Confidentialité :</strong></p>
-            <ul>
-                <li><strong>Confidentialité :</strong> Aucune donnée saisie n'est transmise à un serveur. Vos informations sont stockées exclusivement dans votre navigateur.</li>
-                <li><strong>Responsabilité :</strong> Cet outil est une aide au calcul et ne remplace pas un expert-comptable ou vos déclarations officielles (URSSAF/Impôts).</li>
-                <li><strong>Sauvegarde :</strong> La sécurité de vos données dépend de votre navigateur. Utilisez régulièrement la fonction "Backup" (export JSON).</li>
-            </ul>
+        <footer class="legal-notice" style="margin-top: 40px; font-size: 0.8rem; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 20px;">
+            <p><strong>Sécurité & Confidentialité :</strong></p>
+            <p>Cet outil fonctionne en local. Aucune donnée n'est envoyée sur un serveur tiers. Pensez à utiliser la fonction <strong>Backup</strong> régulièrement pour ne pas perdre vos saisies.</p>
         </footer>
     </div>
 
