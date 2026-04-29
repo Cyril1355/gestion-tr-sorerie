@@ -99,21 +99,54 @@ function toggleTheme() {
 }
 
 function exporterPDF() {
+    console.log("Démarrage de l'export PDF haute précision...");
     const element = document.getElementById('app-body');
-    const buttons = document.querySelectorAll('.btn, .toolbar');
-    buttons.forEach(b => b.style.visibility = 'hidden');
+    
+    // 1. On crée un style temporaire pour réorganiser la page pour le PDF
+    const style = document.createElement('style');
+    style.innerHTML = `
+        /* On force le tableau et le graphique à se suivre verticalement */
+        .main-layout { 
+            display: flex !important; 
+            flex-direction: column !important; 
+        }
+        .table-section, .chart-section { 
+            width: 100% !important; 
+            display: block !important; 
+            position: relative !important; 
+            margin-bottom: 30px !important;
+        }
+        /* On masque les éléments interactifs inutiles sur le papier */
+        .toolbar, .main-actions, .btn, .config-inputs { 
+            display: none !important; 
+        }
+        /* On s'assure que le graphique ne survole rien */
+        canvas { 
+            max-width: 100% !important; 
+            height: auto !important; 
+        }
+    `;
+    document.head.appendChild(style);
 
+    // 2. Configuration de html2pdf
     const opt = {
         margin: [10, 10],
-        filename: 'Rapport_Tresorerie_Pro.pdf',
+        filename: 'Expert_Tresorerie_Rapport.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        // PASSAGE EN PORTRAIT POUR ÉVITER LES COUPURES
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
+        html2canvas: { 
+            scale: 2, 
+            useCORS: true, 
+            logging: false,
+            letterRendering: true 
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
+    // 3. Exécution de l'export
     html2pdf().set(opt).from(element).save().then(() => {
-        buttons.forEach(b => b.style.visibility = 'visible');
+        // 4. On supprime le style temporaire pour rendre l'interface normale
+        style.remove();
+        console.log("PDF généré proprement.");
     });
 }
 
