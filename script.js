@@ -99,28 +99,39 @@ function toggleTheme() {
 }
 
 function exporterPDF() {
-    console.log("Démarrage de l'export PDF haute précision...");
+    console.log("Génération du rapport PDF en cours...");
     const element = document.getElementById('app-body');
     
-    // 1. On crée un style temporaire pour réorganiser la page pour le PDF
+    // 1. Création d'un style invisible pour forcer la mise en page propre du PDF
     const style = document.createElement('style');
     style.innerHTML = `
-        /* On force le tableau et le graphique à se suivre verticalement */
+        /* On force une disposition verticale stricte pour le PDF */
         .main-layout { 
-            display: flex !important; 
-            flex-direction: column !important; 
-        }
-        .table-section, .chart-section { 
-            width: 100% !important; 
             display: block !important; 
-            position: relative !important; 
-            margin-bottom: 30px !important;
         }
-        /* On masque les éléments interactifs inutiles sur le papier */
-        .toolbar, .main-actions, .btn, .config-inputs { 
+        
+        /* On masque les éléments interactifs du site sur le document final */
+        .toolbar, .main-actions, .btn, .config-inputs, .legal-notice { 
             display: none !important; 
         }
-        /* On s'assure que le graphique ne survole rien */
+
+        /* On force le tableau à se terminer sur la première page */
+        .table-section { 
+            width: 100% !important; 
+            page-break-after: always !important; 
+            margin-bottom: 20px !important;
+        }
+
+        /* On force le graphique à commencer sur une nouvelle page propre */
+        .chart-section { 
+            width: 100% !important; 
+            display: block !important;
+            position: relative !important;
+            page-break-before: always !important;
+            padding-top: 40px !important;
+        }
+
+        /* On assure la netteté du graphique */
         canvas { 
             max-width: 100% !important; 
             height: auto !important; 
@@ -128,10 +139,10 @@ function exporterPDF() {
     `;
     document.head.appendChild(style);
 
-    // 2. Configuration de html2pdf
+    // 2. Paramétrage de l'exportateur
     const opt = {
         margin: [10, 10],
-        filename: 'Expert_Tresorerie_Rapport.pdf',
+        filename: 'Rapport_Tresorerie_Final.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
             scale: 2, 
@@ -139,14 +150,15 @@ function exporterPDF() {
             logging: false,
             letterRendering: true 
         },
+        // Orientation Portrait (Vertical) pour éviter les écrasements de colonnes
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    // 3. Exécution de l'export
+    // 3. Lancement de la capture et sauvegarde
     html2pdf().set(opt).from(element).save().then(() => {
-        // 4. On supprime le style temporaire pour rendre l'interface normale
+        // 4. Nettoyage : on enlève le style spécial pour revenir à l'interface normale
         style.remove();
-        console.log("PDF généré proprement.");
+        console.log("PDF exporté avec succès.");
     });
 }
 
