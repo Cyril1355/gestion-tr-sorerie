@@ -99,15 +99,32 @@ function toggleTheme() {
 }
 
 function exporterPDF() {
+    console.log("Préparation du PDF...");
     const element = document.getElementById('app-body');
+    
+    // On cache temporairement les boutons pour un PDF propre
+    const buttons = document.querySelectorAll('.btn, .toolbar');
+    buttons.forEach(b => b.style.visibility = 'hidden');
+
     const opt = {
-        margin: 10,
-        filename: 'Rapport_Tresorerie.pdf',
+        margin: [10, 10],
+        filename: 'Rapport_Expert_Tresorerie.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
+        html2canvas: { 
+            scale: 2, 
+            useCORS: true, 
+            logging: false,
+            letterRendering: true
+        },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
     };
-    html2pdf().set(opt).from(element).save();
+
+    // Génération avec une promesse pour s'assurer que tout est rendu
+    html2pdf().set(opt).from(element).toPdf().get('pdf').save().then(() => {
+        // On réaffiche les boutons après l'export
+        buttons.forEach(b => b.style.visibility = 'visible');
+        console.log("PDF Terminé !");
+    });
 }
 
 async function exportData() {
