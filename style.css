@@ -3,76 +3,58 @@
     --primary: #34495e; --success: #27ae60; --danger: #e74c3c;
 }
 
-/* On s'assure que le fond prend tout l'écran */
-html, body {
-    margin: 0; padding: 0; width: 100%; min-height: 100vh;
-    background: var(--bg); font-family: 'Segoe UI', sans-serif;
+[data-theme="dark"] {
+    --bg: #1a1a1a; --text: #ecf0f1; --card: #2c2c2c;
 }
 
-/* Le conteneur doit être large ! */
+html, body {
+    margin: 0; padding: 0; width: 100%; min-height: 100vh;
+    background: var(--bg); font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
 .container { 
-    width: 95%; /* Utilise 95% de la largeur de l'écran */
-    max-width: 1400px; /* Mais s'arrête à 1400px pour ne pas être trop géant sur les très grands écrans */
-    margin: 20px auto; 
-    background: var(--card); 
-    padding: 25px; 
-    border-radius: 12px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    box-sizing: border-box;
+    width: 95%; max-width: 1400px; margin: 20px auto; 
+    background: var(--card); padding: 20px; border-radius: 12px; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); box-sizing: border-box;
 }
 
 .header-pro { 
     display: flex; justify-content: space-between; align-items: center; 
     border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px;
+    flex-wrap: wrap; gap: 10px;
 }
 
 .toolbar { 
     display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; 
-    background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee;
+    background: rgba(0,0,0,0.03); padding: 15px; border-radius: 8px;
 }
 
-/* MISE EN PAGE : C'est ici que ça se joue */
+.toolbar input, .btn, .tva-label { min-height: 44px; box-sizing: border-box; }
+
 .main-layout { 
-    display: flex; /* Utilise Flexbox pour mettre côte à côte */
-    gap: 30px; 
-    align-items: flex-start;
+    display: flex; gap: 25px; align-items: flex-start; width: 100%; 
 }
 
-.table-section { 
-    flex: 2; /* Le tableau prend 2/3 de la place */
-    min-width: 0; /* Empêche le débordement */
-}
+.table-section { flex: 2; min-width: 0; }
 
 .chart-section { 
-    flex: 1; /* Le graphique prend 1/3 de la place */
-    position: sticky; top: 20px; /* Le graphique reste visible quand on scrolle le tableau */
-    background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #eee;
-    min-height: 400px;
+    flex: 1; background: #fff; padding: 15px; border-radius: 8px; 
+    border: 1px solid #eee; min-height: 350px; position: relative;
 }
 
-table { width: 100%; border-collapse: collapse; background: white; }
+table { width: 100%; border-collapse: collapse; min-width: 600px; }
 th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
 th { background: var(--primary); color: white; }
 
-input[type="number"], input[type="text"] {
-    width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;
+/* Responsive Mobile */
+@media (max-width: 1024px) {
+    .main-layout { flex-direction: column; }
+    .chart-section { order: -1; width: 100%; box-sizing: border-box; }
+    .table-section { width: 100%; overflow-x: auto; }
+    .header-pro { flex-direction: column; text-align: center; }
 }
 
-.btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; }
+.btn { border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; padding: 0 20px; }
 .btn-pdf { background: var(--danger); }
+.btn-theme { background: var(--primary); }
 .btn-backup { background: #3498db; }
-
-/* RESPONSIVE : Si l'écran est petit (Mobile) */
-@media (max-width: 1100px) {
-    .main-layout { 
-        flex-direction: column; /* On empile sur mobile */
-    }
-    .table-section, .chart-section { 
-        width: 100%; 
-        flex: none;
-    }
-    .chart-section {
-        order: -1; /* Graphique en premier sur mobile */
-        min-height: 300px;
-    }
-}
