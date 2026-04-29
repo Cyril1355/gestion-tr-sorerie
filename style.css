@@ -67,36 +67,34 @@ canvas {
 
 /* Optimisation spécifique pour le PDF */
 @media print {
-    /* On cache tout ce qui n'est pas du contenu (boutons, formulaires de saisie) */
-    .toolbar, .main-actions, .btn, .config-inputs {
+    /* Cache les éléments inutiles */
+    .toolbar, .main-actions, .btn, .config-inputs, .legal-notice {
         display: none !important;
     }
 
-    /* Le tableau prend toute la largeur */
-    .table-section {
-        width: 100% !important;
-        page-break-after: auto;
-    }
-
-    /* FORCE LE GRAPHIQUE SUR UNE NOUVELLE PAGE */
-    .chart-section {
-        display: block !important;
-        width: 100% !important;
-        page-break-before: always; /* Force le saut de page avant le graphique */
-        margin-top: 50px;
-        padding-top: 20px;
-    }
-
-    /* Empêche le tableau d'être coupé au milieu d'une ligne */
-    tr {
-        page-break-inside: avoid;
-    }
-
+    /* Force le conteneur à utiliser toute la page */
     .container {
-        box-shadow: none !important;
-        border: none !important;
         width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
+        box-shadow: none !important;
+    }
+
+    /* Le tableau reste sur la première page */
+    .table-section {
+        width: 100% !important;
+        page-break-after: always; /* Force la fin de la page après le tableau */
+    }
+
+    /* Le graphique commence obligatoirement sur une nouvelle page */
+    .chart-section {
+        display: block !important;
+        width: 100% !important;
+        padding-top: 50px !important;
+    }
+
+    /* Empêche les coupures de texte moches */
+    tr, td, th {
+        page-break-inside: avoid !important;
     }
 }
