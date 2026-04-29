@@ -99,31 +99,34 @@ function toggleTheme() {
 }
 
 function exporterPDF() {
-    console.log("Préparation du PDF...");
+    console.log("Exportation PDF forcée...");
     const element = document.getElementById('app-body');
     
-    // On cache temporairement les boutons pour un PDF propre
-    const buttons = document.querySelectorAll('.btn, .toolbar');
-    buttons.forEach(b => b.style.visibility = 'hidden');
+    // On force un style propre uniquement pour l'export
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .main-layout { display: block !important; width: 100% !important; }
+        .chart-section { width: 100% !important; margin-top: 30px !important; position: static !important; }
+        canvas { width: 100% !important; height: auto !important; }
+        .toolbar, .main-actions, .btn { display: none !important; }
+    `;
+    document.head.appendChild(style);
 
     const opt = {
-        margin: [10, 10],
-        filename: 'Rapport_Expert_Tresorerie.pdf',
+        margin: [15, 15],
+        filename: 'Rapport_Final.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
             scale: 2, 
-            useCORS: true, 
-            logging: false,
-            letterRendering: true
+            useCORS: true,
+            scrollY: 0 // Force la capture à partir du haut pour éviter les décalages
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
     };
 
-    // Génération avec une promesse pour s'assurer que tout est rendu
-    html2pdf().set(opt).from(element).toPdf().get('pdf').save().then(() => {
-        // On réaffiche les boutons après l'export
-        buttons.forEach(b => b.style.visibility = 'visible');
-        console.log("PDF Terminé !");
+    html2pdf().set(opt).from(element).save().then(() => {
+        style.remove(); // On enlève le style spécial après l'export
+        console.log("PDF exporté avec succès.");
     });
 }
 
