@@ -9,45 +9,49 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body id="app-body">
-    <div class="main-layout">
-        <div class="table-section">
-            <header>
+    <div class="container"> <!-- AJOUT DE CETTE DIV POUR LE STYLE -->
+        <header class="header-pro"> <!-- CLASSE AJOUTÉE -->
+            <div>
                 <h1>Ma Trésorerie SARL</h1>
                 <p>Structure : Kiaelle | Régime : TNS</p>
-            </header>
-
+            </div>
             <div class="main-actions">
                 <button onclick="exporterPDF()" class="btn btn-pdf">Exporter en PDF</button>
             </div>
+        </header>
 
-            <table id="treso-table">
-                <thead>
-                    <tr>
-                        <th style="width: 10%;">Mois</th>
-                        <th style="width: 15%;">CA Brut (€)</th>
-                        <th style="width: 12%;">TVA (20%)</th>
-                        <th style="width: 18%;">Cotisations TNS (€)</th>
-                        <th style="width: 15%;">Frais (€)</th>
-                        <th style="width: 15%;">Bénéfice Net</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
+        <div class="main-layout">
+            <div class="table-section">
+                <table id="treso-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">Mois</th>
+                            <th style="width: 15%;">CA Brut (€)</th>
+                            <th style="width: 12%;">TVA (20%)</th>
+                            <th style="width: 18%;">Cotisations TNS (€)</th>
+                            <th style="width: 15%;">Frais (€)</th>
+                            <th style="width: 15%;">Bénéfice Net</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Les lignes seront générées par le script -->
                     </tbody>
-                <tfoot>
-                    <tr class="total-row">
-                        <td>TOTAL ANNUEL</td>
-                        <td id="total-ca">0.00 €</td>
-                        <td id="total-tva">0.00 €</td>
-                        <td id="total-tns">0.00 €</td>
-                        <td id="total-frais">0.00 €</td>
-                        <td id="total-net">0.00 €</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+                    <tfoot>
+                        <tr class="total-row" style="background: #f8f9fa; font-weight: bold;">
+                            <td>TOTAL</td>
+                            <td id="total-ca">0.00 €</td>
+                            <td id="total-tva">0.00 €</td>
+                            <td id="total-tns">17.00 €</td>
+                            <td id="total-frais">0.00 €</td>
+                            <td id="total-net">-17.00 €</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
 
-        <div class="chart-section">
-            <canvas id="beneficeChart"></canvas>
+            <div class="chart-section">
+                <canvas id="beneficeChart"></canvas>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
