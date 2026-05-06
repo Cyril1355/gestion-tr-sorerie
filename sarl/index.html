@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion Trésorerie SARL - Kiaelle</title>
+    <title>Ma Trésorerie SARL - Kiaelle</title>
+    <!-- On s'assure que le lien vers le CSS est correct -->
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body id="app-body">
-    <div class="container"> <!-- AJOUT DE CETTE DIV POUR LE STYLE -->
-        <header class="header-pro"> <!-- CLASSE AJOUTÉE -->
-            <div>
+    <div class="container"> <!-- Élément crucial pour le design -->
+        <header class="header-pro">
+            <div class="brand">
+                <img src="logo-kiaelle.png" alt="Logo Kiaelle" style="height: 60px; margin-bottom: 10px;">
                 <h1>Ma Trésorerie SARL</h1>
                 <p>Structure : Kiaelle | Régime : TNS</p>
             </div>
@@ -25,25 +27,25 @@
                 <table id="treso-table">
                     <thead>
                         <tr>
-                            <th style="width: 10%;">Mois</th>
-                            <th style="width: 15%;">CA Brut (€)</th>
-                            <th style="width: 12%;">TVA (20%)</th>
-                            <th style="width: 18%;">Cotisations TNS (€)</th>
-                            <th style="width: 15%;">Frais (€)</th>
-                            <th style="width: 15%;">Bénéfice Net</th>
+                            <th>Mois</th>
+                            <th>CA Brut (€)</th>
+                            <th>TVA (20%)</th>
+                            <th>Cotisations TNS (€)</th>
+                            <th>Frais (€)</th>
+                            <th>Bénéfice Net</th>
                         </tr>
                     </thead>
                     <tbody id="table-body">
-                        <!-- Les lignes seront générées par le script -->
+                        <!-- Généré par JS -->
                     </tbody>
                     <tfoot>
-                        <tr class="total-row" style="background: #f8f9fa; font-weight: bold;">
+                        <tr class="total-row">
                             <td>TOTAL</td>
                             <td id="total-ca">0.00 €</td>
                             <td id="total-tva">0.00 €</td>
-                            <td id="total-tns">17.00 €</td>
+                            <td id="total-tns">0.00 €</td>
                             <td id="total-frais">0.00 €</td>
-                            <td id="total-net">-17.00 €</td>
+                            <td id="total-net">0.00 €</td>
                         </tr>
                     </tfoot>
                 </table>
