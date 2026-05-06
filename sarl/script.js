@@ -116,12 +116,52 @@ function mettreAJourGraphique() {
 
 function exporterPDF() {
     const element = document.getElementById('app-body');
+    
+    // Création du style correcteur
+    const style = document.createElement('style');
+    style.innerHTML = `
+        /* On force la structure à s'empiler verticalement */
+        .main-layout { 
+            display: flex !important; 
+            flex-direction: column !important; 
+            align-items: center !important;
+        }
+        
+        /* On s'assure que les deux sections prennent toute la largeur */
+        .table-section, .chart-section { 
+            width: 100% !important; 
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 10px 0 !important;
+        }
+
+        /* Saut de page automatique pour éviter de couper le graphique */
+        .chart-section { 
+            page-break-before: always !important; 
+        }
+
+        /* On cache les boutons et réglages sur le PDF */
+        .toolbar, .main-actions, .btn, .config-inputs { 
+            display: none !important; 
+        }
+
+        /* On ajuste la taille du tableau pour qu'il ne déborde pas à droite */
+        table { 
+            width: 100% !important; 
+            font-size: 10px !important; 
+        }
+    `;
+    document.head.appendChild(style);
+
     const opt = {
         margin: [10, 5],
-        filename: 'Reporting_Tresorerie_Kiaelle.pdf',
+        filename: 'Ma_Tresorerie_Rapport.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
+        html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
-    html2pdf().set(opt).from(element).save();
+
+    html2pdf().set(opt).from(element).save().then(() => {
+        style.remove(); // On retire le style après l'export pour retrouver l'affichage normal
+    });
 }
