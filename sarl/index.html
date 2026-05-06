@@ -4,27 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ma Trésorerie SARL - Kiaelle</title>
-    <!-- On s'assure que le lien vers le CSS est correct -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body id="app-body">
-    <div class="container"> <!-- Élément crucial pour le design -->
+    <div class="container">
         <header class="header-pro">
             <div class="brand">
-                <img src="logo-kiaelle.jpg" alt="Logo Kiaelle" style="height: 60px; margin-bottom: 10px;">
+                <img src="logo-kiaelle.png" alt="Logo Kiaelle" style="max-height: 70px;" onerror="this.style.display='none'">
                 <h1>Ma Trésorerie SARL</h1>
-                <p>Structure : Kiaelle | Régime : TNS</p>
+                <p>Structure : <strong>Kiaelle</strong> | Régime : <strong>TNS</strong></p>
             </div>
-            <div class="main-actions">
-                <button onclick="exporterPDF()" class="btn btn-pdf">Exporter en PDF</button>
+            <div class="toolbar">
+                <button onclick="toggleTheme()" class="btn btn-theme">Mode Sombre</button>
+                <button onclick="exporterPDF()" class="btn btn-pdf">Exporter PDF</button>
+                <button onclick="saveData()" class="btn btn-backup">Sauvegarder (Backup)</button>
+                <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+                <button onclick="document.getElementById('importFile').click()" class="btn" style="background:#9b59b6">Importer</button>
             </div>
         </header>
 
         <div class="main-layout">
             <div class="table-section">
-                <table id="treso-table">
+                <table>
                     <thead>
                         <tr>
                             <th>Mois</th>
@@ -35,12 +38,10 @@
                             <th>Bénéfice Net</th>
                         </tr>
                     </thead>
-                    <tbody id="table-body">
-                        <!-- Généré par JS -->
-                    </tbody>
+                    <tbody id="table-body"></tbody>
                     <tfoot>
                         <tr class="total-row">
-                            <td>TOTAL</td>
+                            <td>TOTAL ANNUEL</td>
                             <td id="total-ca">0.00 €</td>
                             <td id="total-tva">0.00 €</td>
                             <td id="total-tns">0.00 €</td>
@@ -50,7 +51,6 @@
                     </tfoot>
                 </table>
             </div>
-
             <div class="chart-section">
                 <canvas id="beneficeChart"></canvas>
             </div>
