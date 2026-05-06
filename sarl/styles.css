@@ -98,3 +98,22 @@ canvas {
         page-break-inside: avoid !important;
     }
 }
+input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+input[type="number"]:focus {
+    border-color: var(--success);
+    outline: none;
+    background: #f0fff4;
+}
+
+.total-row td {
+    border-top: 2px solid var(--primary);
+    color: var(--primary);
+}
