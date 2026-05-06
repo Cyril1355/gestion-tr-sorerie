@@ -117,51 +117,64 @@ function mettreAJourGraphique() {
 function exporterPDF() {
     const element = document.getElementById('app-body');
     
-    // Création du style correcteur
+    // Création du style correcteur pour forcer le tableau sur une seule page
     const style = document.createElement('style');
     style.innerHTML = `
-        /* On force la structure à s'empiler verticalement */
+        /* On réduit légèrement la taille globale pour l'impression */
+        .container { 
+            width: 100% !important; 
+            margin: 0 !important; 
+            padding: 5px !important; 
+        }
+        
         .main-layout { 
             display: flex !important; 
             flex-direction: column !important; 
-            align-items: center !important;
+        }
+
+        /* Optimisation du tableau pour tenir sur une page A4 */
+        .table-section { 
+            width: 100% !important; 
         }
         
-        /* On s'assure que les deux sections prennent toute la largeur */
-        .table-section, .chart-section { 
-            width: 100% !important; 
-            max-width: 100% !important;
-            margin: 0 !important;
-            padding: 10px 0 !important;
-        }
-
-        /* Saut de page automatique pour éviter de couper le graphique */
-        .chart-section { 
-            page-break-before: always !important; 
-        }
-
-        /* On cache les boutons et réglages sur le PDF */
-        .toolbar, .main-actions, .btn, .config-inputs { 
-            display: none !important; 
-        }
-
-        /* On ajuste la taille du tableau pour qu'il ne déborde pas à droite */
         table { 
             width: 100% !important; 
-            font-size: 10px !important; 
+            font-size: 9px !important; /* On réduit à 9px pour gagner de la place */
+            border-collapse: collapse !important;
+        }
+
+        th, td { 
+            padding: 6px 4px !important; /* On réduit l'espacement interne des cellules */
+        }
+
+        /* Empêche le tableau de se couper avant la ligne TOTAL */
+        table, tr, tfoot {
+            page-break-inside: avoid !important;
+        }
+
+        /* On force le graphique à démarrer sur la page 2 */
+        .chart-section { 
+            width: 100% !important;
+            page-break-before: always !important; 
+            padding-top: 20px !important;
+        }
+
+        /* Cache les éléments interactifs */
+        .toolbar, .main-actions, .btn, .config-inputs { 
+            display: none !important; 
         }
     `;
     document.head.appendChild(style);
 
     const opt = {
-        margin: [10, 5],
-        filename: 'Ma_Tresorerie_Rapport.pdf',
+        margin: [5, 5], // Marges réduites (Haut/Bas, Gauche/Droite)
+        filename: 'Reporting_Tresorerie_Kiaelle.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     html2pdf().set(opt).from(element).save().then(() => {
-        style.remove(); // On retire le style après l'export pour retrouver l'affichage normal
+        style.remove(); // On restaure l'affichage web
     });
 }
