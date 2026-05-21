@@ -1,75 +1,64 @@
-:root {
-    --bg-color: #f8f9fa;
-    --container-bg: #ffffff;
-    --text-color: #2c3e50;
-    --border-color: #e2e8f0;
-}
-
-[data-theme="dark"] {
-    --bg-color: #1a1a1a;
-    --container-bg: #2d2d2d;
-    --text-color: #f5f6fa;
-    --border-color: #404040;
-}
-
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    margin: 0;
-    padding: 20px;
-    transition: background 0.3s, color 0.3s;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    background: var(--container-bg);
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-.header-pro {
+/* --- Layout Principal (Côte à côte) --- */
+.main-layout {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 15px;
-    margin-bottom: 25px;
+    flex-direction: row; /* Aligne le tableau et le graphique sur la même ligne */
+    gap: 20px;
+    align-items: flex-start;
+    margin-top: 20px;
 }
 
-.brand h1 { margin: 0; font-size: 22px; }
-.brand p { margin: 5px 0 0 0; color: #7f8c8d; font-size: 14px; }
-.toolbar { display: flex; gap: 10px; }
+/* --- Section Tableau (Prend 65% de la largeur) --- */
+.table-section {
+    flex: 65;
+    overflow-x: auto;
+}
 
-.btn {
-    padding: 8px 14px;
-    border: none;
-    border-radius: 4px;
-    font-weight: 600;
-    cursor: pointer;
+/* --- Section Graphique (Prend 35% de la largeur) --- */
+.chart-section {
+    flex: 35;
+    background: var(--container-bg);
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    border-radius: 8px;
+    height: 480px; /* Aligné sur la hauteur du tableau */
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* --- Ajustements Table pour écran large --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #34495e;
     color: white;
+    padding: 10px 8px;
+    font-size: 12px;
+    text-transform: uppercase;
 }
 
-.btn-theme { background: #f39c12; }
-.btn-pdf { background: #e74c3c; }
-.btn-backup { background: #2ecc71; }
+[data-theme="dark"] th {
+    background-color: #111;
+}
 
-.main-layout { display: flex; flex-direction: column; gap: 30px; }
-table { width: 100%; border-collapse: collapse; }
-th { background-color: #34495e; color: white; padding: 12px; font-size: 14px; }
-[data-theme="dark"] th { background-color: #111; }
-td { padding: 10px; border-bottom: 1px solid var(--border-color); }
+td {
+    padding: 8px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 13px;
+}
 
 input[type="number"] {
-    width: 100px;
-    padding: 6px;
+    width: 80px;
+    padding: 5px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
     background: var(--container-bg);
     color: var(--text-color);
 }
 
-.total-row { font-weight: bold; background-color: rgba(52, 152, 219, 0.1); }
-.chart-section { height: 350px; position: relative; }
+.total-row {
+    font-weight: bold;
+    background-color: rgba(52, 152, 219, 0.1);
+}
