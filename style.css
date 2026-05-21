@@ -1,100 +1,147 @@
+/* --- Variables & Thèmes --- */
 :root {
-    --bg: #f4f7f6; --text: #2c3e50; --card: #ffffff;
-    --primary: #34495e; --success: #27ae60; --danger: #e74c3c;
+    --bg-color: #f8f9fa;
+    --container-bg: #ffffff;
+    --text-color: #2c3e50;
+    --border-color: #e2e8f0;
+    --primary-color: #3498db;
+    --btn-shadow: rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="dark"] {
-    --bg: #1a1a1a; --text: #ecf0f1; --card: #2c2c2c;
+    --bg-color: #1a1a1a;
+    --container-bg: #2d2d2d;
+    --text-color: #f5f6fa;
+    --border-color: #404040;
+    --primary-color: #2980b9;
 }
 
-html, body {
-    margin: 0; padding: 0; width: 100%; min-height: 100vh;
-    background: var(--bg); font-family: 'Segoe UI', system-ui, sans-serif;
+/* --- Styles Généraux --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.container { 
-    width: 95%; max-width: 1400px; margin: 20px auto; 
-    background: var(--card); padding: 20px; border-radius: 12px; 
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08); box-sizing: border-box;
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: var(--container-bg);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-.header-pro { 
-    display: flex; justify-content: space-between; align-items: center; 
-    border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px;
-    flex-wrap: wrap; gap: 10px;
+/* --- Header & Toolbar --- */
+.header-pro {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 20px;
+    margin-bottom: 25px;
 }
 
-.toolbar { 
-    display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; 
-    background: rgba(0,0,0,0.03); padding: 15px; border-radius: 8px;
+.brand h1 {
+    margin: 0 0 5px 0;
+    font-size: 24px;
+    color: var(--text-color);
 }
 
-.toolbar input, .btn, .tva-label { min-height: 44px; box-sizing: border-box; }
-
-.main-layout { 
-    display: flex; gap: 25px; align-items: flex-start; width: 100%; 
+.brand p {
+    margin: 0;
+    font-size: 14px;
+    color: #7f8c8d;
 }
 
-.table-section { flex: 2; min-width: 0; }
-
-.chart-section { 
-    flex: 1; background: #fff; padding: 15px; border-radius: 8px; 
-    border: 1px solid #eee; min-height: 350px; position: relative;
+.toolbar {
+    display: flex;
+    gap: 10px;
 }
 
-table { width: 100%; border-collapse: collapse; min-width: 600px; }
-th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
-th { background: var(--primary); color: white; }
-
-/* Responsive Mobile */
-@media (max-width: 1024px) {
-    .main-layout { flex-direction: column; }
-    .chart-section { order: -1; width: 100%; box-sizing: border-box; }
-    .table-section { width: 100%; overflow-x: auto; }
-    .header-pro { flex-direction: column; text-align: center; }
+/* --- Boutons --- */
+.btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 2px 4px var(--btn-shadow);
+    color: white;
 }
 
-.btn { border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; padding: 0 20px; }
-.btn-pdf { background: var(--danger); }
-.btn-theme { background: var(--primary); }
-.btn-backup { background: #3498db; }
+.btn:active { transform: scale(0.98); }
+.btn-theme { background: #f39c12; }
+.btn-pdf { background: #e74c3c; }
+.btn-backup { background: #2ecc71; }
 
-/* Empêche le graphique de flotter lors de l'export */
-canvas {
-    max-width: 100% !important;
-    height: auto !important;
+/* --- Layout Principal --- */
+.main-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
-/* Optimisation spécifique pour le PDF */
-@media print {
-    /* Cache les éléments inutiles */
-    .toolbar, .main-actions, .btn, .config-inputs, .legal-notice {
-        display: none !important;
-    }
+/* --- Tableaux et Formulaires --- */
+.table-section {
+    overflow-x: auto;
+}
 
-    /* Force le conteneur à utiliser toute la page */
-    .container {
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-    }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
 
-    /* Le tableau reste sur la première page */
-    .table-section {
-        width: 100% !important;
-        page-break-after: always; /* Force la fin de la page après le tableau */
-    }
+th {
+    background-color: #34495e;
+    color: white;
+    padding: 12px 10px;
+    font-size: 13px;
+    text-transform: uppercase;
+}
 
-    /* Le graphique commence obligatoirement sur une nouvelle page */
-    .chart-section {
-        display: block !important;
-        width: 100% !important;
-        padding-top: 50px !important;
-    }
+[data-theme="dark"] th {
+    background-color: #111;
+}
 
-    /* Empêche les coupures de texte moches */
-    tr, td, th {
-        page-break-inside: avoid !important;
-    }
+td {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
+}
+
+input[type="number"] {
+    width: 90px;
+    padding: 6px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--container-bg);
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+/* --- Lignes de Calculs Spécifiques --- */
+.total-row {
+    font-weight: bold;
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.tax-row td, .final-row td {
+    padding: 12px 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* --- Section Graphique --- */
+.chart-section {
+    background: var(--container-bg);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: 8px;
+    height: 380px;
+    position: relative;
 }
