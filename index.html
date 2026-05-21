@@ -13,7 +13,10 @@
         <header class="header-pro">
             <div class="brand">
                 <div class="logo-area">
-                    <img src="logo-kiaelle.png" alt="Logo Kiaelle" id="company-logo" style="max-height: 60px; margin-bottom: 10px;" onerror="this.style.display='none'">
+                    <label for="logo-upload" class="logo-label" title="Cliquez pour changer le logo">
+                        <img src="logo-kiaelle.png" alt="Cliquez pour ajouter un logo" id="company-logo" onerror="this.src='https://placehold.co/150x60/34495e/ffffff?text=Votre+Logo'">
+                    </label>
+                    <input type="file" id="logo-upload" accept="image/*" style="display: none;" onchange="chargerLogo(event)">
                 </div>
                 <h1 contenteditable="true" id="company-name">Mon Dashboard Trésorerie</h1>
                 <p>SIRET : <span contenteditable="true" id="company-siret">000 000 000 00000</span></p>
