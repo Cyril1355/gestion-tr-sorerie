@@ -2,66 +2,83 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Dashboard Trésorerie - Freelance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Expert Trésorerie - Dashboard Pro</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body id="app-body">
-    <div class="container" id="pdf-content">
+
+    <div class="container">
         <header class="header-pro">
-            <div class="brand">
-                <div class="logo-area">
-                    <label for="logo-upload" class="logo-label" title="Cliquez pour changer le logo">
-                        <img src="logo-kiaelle.png" alt="Cliquez pour ajouter un logo" id="company-logo" onerror="this.src='https://placehold.co/150x60/34495e/ffffff?text=Votre+Logo'">
-                    </label>
-                    <input type="file" id="logo-upload" accept="image/*" style="display: none;" onchange="chargerLogo(event)">
+            <div class="logo-area" style="display: flex; align-items: center; gap: 15px;">
+                <img id="logo-img" src="" alt="Logo" style="display:none; max-height: 50px; border-radius: 4px;">
+                <div>
+                    <h1 id="name-display" style="margin:0; font-size: 1.5rem;">Ma Trésorerie</h1>
+                    <small id="siret-display" style="color: #666;">SIRET : -</small>
                 </div>
-                <h1 contenteditable="true" id="company-name">Mon Dashboard Trésorerie</h1>
-                <p>SIRET : <span contenteditable="true" id="company-siret">000 000 000 00000</span></p>
-                <p class="subtitle">Régime : Micro-entreprise / Freelance — Suivi d'activité en temps réel</p>
             </div>
-            <div class="toolbar">
-                <button onclick="toggleTheme()" class="btn btn-theme">Mode Sombre</button>
-                <button onclick="exporterPDF()" class="btn btn-pdf">Exporter PDF</button>
-                <button onclick="saveData()" class="btn btn-backup">Sauvegarder (Backup)</button>
-                <input type="file" id="importFile" style="display:none" onchange="importData(event)">
-                <button onclick="document.getElementById('importFile').click()" class="btn" style="background:#9b59b6">Importer</button>
+            <div class="main-actions">
+                <button class="btn btn-theme" onclick="toggleTheme()" title="Changer de mode">🌓 Mode</button>
+                <button class="btn btn-pdf" onclick="exporterPDF()">Rapport PDF</button>
             </div>
         </header>
 
-        <div class="main-layout">
-            <div class="table-section">
+        <section class="toolbar">
+            <div class="config-inputs" style="display: flex; gap: 10px; flex-wrap: wrap; flex: 2;">
+                <input type="text" id="inName" placeholder="Nom Entreprise">
+                <input type="text" id="inSiret" placeholder="SIRET">
+                <label class="tva-label" style="display: flex; align-items: center; gap: 5px; background: white; padding: 0 10px; border: 1px solid #ccc; border-radius: 6px;">
+                    <input type="checkbox" id="tvaForce"> TVA dès 1€
+                </label>
+                <button class="btn" onclick="saveConfig()" style="background: #27ae60;">Enregistrer</button>
+            </div>
+            
+            <div class="data-actions" style="display: flex; gap: 10px; flex-wrap: wrap; flex: 1; justify-content: flex-end;">
+                <input type="file" id="logoInput" onchange="saveLogo(this)" style="display:none">
+                <button class="btn" onclick="document.getElementById('logoInput').click()" style="background: #95a5a6;">Logo</button>
+                
+                <button class="btn btn-backup" onclick="exportData()">💾 Backup</button>
+                <input type="file" id="importInput" onchange="importData(this)" style="display:none">
+                <button class="btn" onclick="document.getElementById('importInput').click()" style="background: #9b59b6;">📂 Importer</button>
+            </div>
+        </section>
+        
+
+        <main class="main-layout">
+            
+            <section class="table-section">
                 <table>
                     <thead>
                         <tr>
                             <th>Mois</th>
                             <th>CA Brut (€)</th>
                             <th>TVA (20%)</th>
-                            <th>Cotisations (21.1%)</th>
+                            <th>URSSAF (21.1%)</th>
                             <th>Frais (€)</th>
-                            <th>Bénéfice Net</th>
+                            <th>Net Réel</th>
                         </tr>
                     </thead>
-                    <tbody id="table-body"></tbody>
-                    <tfoot>
-                        <tr class="total-row">
-                            <td>TOTAL ANNUEL</td>
-                            <td id="total-ca">0.00 €</td>
-                            <td id="total-tva">0.00 €</td>
-                            <td id="total-urssaf">0.00 €</td>
-                            <td id="total-frais">0.00 €</td>
-                            <td id="total-net">0.00 €</td>
-                        </tr>
-                    </tfoot>
+                    <tbody id="tbody">
+                        </tbody>
+                    <tfoot id="tfoot">
+                        </tfoot>
                 </table>
-            </div>
-            <div class="chart-section">
-                <canvas id="beneficeChart"></canvas>
-            </div>
-        </div>
+            </section>
+
+            <section class="chart-section">
+                <canvas id="mainChart"></canvas>
+            </section>
+
+        </main>
+
+        <footer class="legal-notice" style="margin-top: 40px; font-size: 0.8rem; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 20px;">
+            <p><strong>Sécurité & Confidentialité :</strong></p>
+            <p>Cet outil fonctionne en local. Aucune donnée n'est envoyée sur un serveur tiers. Pensez à utiliser la fonction <strong>Backup</strong> régulièrement pour ne pas perdre vos saisies.</p>
+        </footer>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
