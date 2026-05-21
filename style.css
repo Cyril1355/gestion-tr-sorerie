@@ -1,31 +1,119 @@
-/* --- Layout Principal (Côte à côte) --- */
+/* --- Variables & Thèmes (Gestion des Couleurs) --- */
+:root {
+    --bg-color: #f8f9fa;
+    --container-bg: #ffffff;
+    --text-color: #2c3e50;
+    --border-color: #e2e8f0;
+    --btn-shadow: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --container-bg: #2d2d2d;
+    --text-color: #f5f6fa;
+    --border-color: #404040;
+}
+
+/* --- Styles Généraux --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    max-width: 1500px;
+    margin: 0 auto;
+    background: var(--container-bg);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Header & Toolbar (Boutons en haut) --- */
+.header-pro {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+.brand h1 { 
+    margin: 0; 
+    font-size: 22px; 
+}
+
+.brand p { 
+    margin: 5px 0 0 0; 
+    color: #7f8c8d; 
+    font-size: 14px; 
+}
+
+.toolbar { 
+    display: flex; 
+    gap: 10px; 
+    align-items: center;
+}
+
+/* --- Boutons Stylisés --- */
+.btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    color: white;
+    font-size: 13px;
+    box-shadow: 0 2px 4px var(--btn-shadow);
+}
+
+.btn:active { 
+    transform: scale(0.98); 
+}
+
+.btn-theme { background: #f39c12; }
+.btn-theme:hover { background: #d35400; }
+
+.btn-pdf { background: #e74c3c; }
+.btn-pdf:hover { background: #c0392b; }
+
+.btn-backup { background: #2ecc71; }
+.btn-backup:hover { background: #27ae60; }
+
+/* --- Layout Principal (Mise en page côte à côte) --- */
 .main-layout {
     display: flex;
     flex-direction: row; /* Aligne le tableau et le graphique sur la même ligne */
-    gap: 20px;
+    gap: 25px;
     align-items: flex-start;
     margin-top: 20px;
 }
 
-/* --- Section Tableau (Prend 65% de la largeur) --- */
+/* --- Section Tableau (Gauche - 65%) --- */
 .table-section {
     flex: 65;
     overflow-x: auto;
 }
 
-/* --- Section Graphique (Prend 35% de la largeur) --- */
+/* --- Section Graphique (Droite - 35%) --- */
 .chart-section {
     flex: 35;
     background: var(--container-bg);
     border: 1px solid var(--border-color);
     padding: 15px;
     border-radius: 8px;
-    height: 480px; /* Aligné sur la hauteur du tableau */
+    height: 490px; /* S'aligne parfaitement avec la hauteur du tableau */
     position: relative;
     box-sizing: border-box;
 }
 
-/* --- Ajustements Table pour écran large --- */
+/* --- Styles du Tableau --- */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -34,9 +122,10 @@ table {
 th {
     background-color: #34495e;
     color: white;
-    padding: 10px 8px;
+    padding: 12px 8px;
     font-size: 12px;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 [data-theme="dark"] th {
@@ -44,18 +133,19 @@ th {
 }
 
 td {
-    padding: 8px;
+    padding: 10px 8px;
     border-bottom: 1px solid var(--border-color);
     font-size: 13px;
 }
 
 input[type="number"] {
-    width: 80px;
-    padding: 5px;
+    width: 85px;
+    padding: 6px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
     background: var(--container-bg);
     color: var(--text-color);
+    font-weight: 500;
 }
 
 .total-row {
