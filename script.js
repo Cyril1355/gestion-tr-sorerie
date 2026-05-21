@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initialiserTableau() {
     const tbody = document.getElementById('table-body');
+    if (!tbody) return; // Sécurité si l'élément n'est pas trouvé
+    
     tbody.innerHTML = "";
     moisAnnee.forEach(mois => {
         const row = document.createElement('tr');
@@ -36,7 +38,6 @@ function calculerLigne(row) {
     row.querySelector('.tva').textContent = tva.toFixed(2) + " €";
     row.querySelector('.urssaf').textContent = urssaf.toFixed(2) + " €";
     
-    // Formule classique : CA - TVA - URSSAF - Frais
     const netReel = caBrut - tva - urssaf - frais;
     const netElt = row.querySelector('.net-reel');
     netElt.textContent = netReel.toFixed(2) + " €";
@@ -57,11 +58,11 @@ function calculerTotaux() {
         totaux.net += parseFloat(row.querySelector('.net-reel').textContent) || 0;
     });
 
-    document.getElementById('total-ca').textContent = totaux.ca.toFixed(2) + " €";
-    document.getElementById('total-tva').textContent = totaux.tva.toFixed(2) + " €";
-    document.getElementById('total-urssaf').textContent = totaux.urssaf.toFixed(2) + " €";
-    document.getElementById('total-frais').textContent = totaux.frais.toFixed(2) + " €";
-    document.getElementById('total-net').textContent = totaux.net.toFixed(2) + " €";
+    if(document.getElementById('total-ca')) document.getElementById('total-ca').textContent = totaux.ca.toFixed(2) + " €";
+    if(document.getElementById('total-tva')) document.getElementById('total-tva').textContent = totaux.tva.toFixed(2) + " €";
+    if(document.getElementById('total-urssaf')) document.getElementById('total-urssaf').textContent = totaux.urssaf.toFixed(2) + " €";
+    if(document.getElementById('total-frais')) document.getElementById('total-frais').textContent = totaux.frais.toFixed(2) + " €";
+    if(document.getElementById('total-net')) document.getElementById('total-net').textContent = totaux.net.toFixed(2) + " €";
 
     mettreAJourGraphique();
 }
@@ -105,7 +106,10 @@ function importData(event) {
 }
 
 function initialiserGraphique() {
-    const ctx = document.getElementById('beneficeChart').getContext('2d');
+    const canvas = document.getElementById('beneficeChart');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
     chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -127,7 +131,10 @@ function initialiserGraphique() {
 }
 
 function mettreAJourGraphique() {
-    const donnees = Array.from(document.querySelectorAll('.net-reel')).map(el => parseFloat(el.textContent) || 0);
+    const elts = document.querySelectorAll('.net-reel');
+    if(elts.length === 0) return;
+    
+    const donnees = Array.from(elts).map(el => parseFloat(el.textContent) || 0);
     if(chart) {
         chart.data.datasets[0].data = donnees;
         chart.update();
