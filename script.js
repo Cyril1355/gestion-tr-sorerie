@@ -11,8 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initialiserTableau() {
     const tbody = document.getElementById('table-body');
-    if (!tbody) return; // Sécurité si l'élément n'est pas trouvé
-    
+    if (!tbody) return;
     tbody.innerHTML = "";
     moisAnnee.forEach(mois => {
         const row = document.createElement('tr');
@@ -142,23 +141,20 @@ function mettreAJourGraphique() {
 }
 
 function exporterPDF() {
-    // Cibler uniquement le conteneur principal
     const element = document.getElementById('pdf-content');
-    
-    // Injecter un style d'impression temporaire et propre pour le format côte à côte
     const style = document.createElement('style');
     style.id = 'pdf-style-override';
     style.innerHTML = `
         body { padding: 0 !important; background: #fff !important; color: #000 !important; }
-        .container { box-shadow: none !important; padding: 10px !important; max-width: 100% !important; }
+        .container { box-shadow: none !important; padding: 5px !important; max-width: 100% !important; }
         .toolbar { display: none !important; }
         .main-layout { display: flex !important; flex-direction: row !important; gap: 15px !important; }
-        .table-section { flex: 60 !important; }
-        .chart-section { flex: 40 !important; height: 380px !important; border: 1px solid #ccc !important; }
-        table { font-size: 11px !important; }
+        .table-section { flex: 65 !important; display: block !important; }
+        .chart-section { flex: 35 !important; height: 440px !important; border: 1px solid #ccc !important; display: block !important; }
+        table { width: 100% !important; font-size: 11px !important; }
         th { background-color: #34495e !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        td { padding: 6px 4px !important; }
-        input[type="number"] { border: none !important; background: transparent !important; width: 65px !important; }
+        td { padding: 8px 5px !important; }
+        input[type="number"] { border: none !important; background: transparent !important; width: 75px !important; color: #000 !important; }
     `;
     document.head.appendChild(style);
 
@@ -167,14 +163,10 @@ function exporterPDF() {
         filename: 'Dashboard_Tresorerie.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } // Mode paysage idéal pour le côte à côte
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
     };
 
-    // Lancement de la capture de l'élément complet
     html2pdf().set(opt).from(element).save().then(() => {
-        style.remove(); // Suppression du style temporaire après l'export
+        style.remove();
     });
-}
-
-    html2pdf().set(opt).from(element).save().then(() => { style.remove(); });
 }
