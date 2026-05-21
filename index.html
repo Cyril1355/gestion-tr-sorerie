@@ -1,186 +1,100 @@
-let db;
-const moisLabels = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+:root {
+    --bg: #f4f7f6; --text: #2c3e50; --card: #ffffff;
+    --primary: #34495e; --success: #27ae60; --danger: #e74c3c;
+}
 
-// 1. Initialisation de la base de données
-const request = indexedDB.open("FreelanceExpertDB", 1);
-request.onupgradeneeded = e => {
-    db = e.target.result;
-    if (!db.objectStoreNames.contains("finance")) db.createObjectStore("finance", { keyPath: "id" });
-    if (!db.objectStoreNames.contains("settings")) db.createObjectStore("settings", { keyPath: "id" });
-};
-request.onsuccess = e => { db = e.target.result; renderApp(); };
+[data-theme="dark"] {
+    --bg: #1a1a1a; --text: #ecf0f1; --card: #2c2c2c;
+}
 
-// 2. Affichage principal
-async function renderApp() {
-    if (!db) return;
-    const tx = db.transaction(["finance", "settings"], "readonly");
-    const settingsStore = tx.objectStore("settings");
-    const financeStore = tx.objectStore("finance");
+html, body {
+    margin: 0; padding: 0; width: 100%; min-height: 100vh;
+    background: var(--bg); font-family: 'Segoe UI', system-ui, sans-serif;
+}
 
-    // Chargement Config & Logo
-    const conf = await new Promise(r => settingsStore.get("config").onsuccess = e => r(e.target.result));
-    const logo = await new Promise(r => settingsStore.get("logo").onsuccess = e => r(e.target.result));
-    const isTvaForced = conf ? conf.tvaForced : false;
+.container { 
+    width: 95%; max-width: 1400px; margin: 20px auto; 
+    background: var(--card); padding: 20px; border-radius: 12px; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); box-sizing: border-box;
+}
 
-    if (conf) {
-        document.getElementById('name-display').innerText = conf.name || "Ma Trésorerie";
-        document.getElementById('siret-display').innerText = "SIRET : " + (conf.siret || "-");
-        document.getElementById('inName').value = conf.name || "";
-        document.getElementById('inSiret').value = conf.siret || "";
-        if(document.getElementById('tvaForce')) document.getElementById('tvaForce').checked = isTvaForced;
+.header-pro { 
+    display: flex; justify-content: space-between; align-items: center; 
+    border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px;
+    flex-wrap: wrap; gap: 10px;
+}
+
+.toolbar { 
+    display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; 
+    background: rgba(0,0,0,0.03); padding: 15px; border-radius: 8px;
+}
+
+.toolbar input, .btn, .tva-label { min-height: 44px; box-sizing: border-box; }
+
+.main-layout { 
+    display: flex; gap: 25px; align-items: flex-start; width: 100%; 
+}
+
+.table-section { flex: 2; min-width: 0; }
+
+.chart-section { 
+    flex: 1; background: #fff; padding: 15px; border-radius: 8px; 
+    border: 1px solid #eee; min-height: 350px; position: relative;
+}
+
+table { width: 100%; border-collapse: collapse; min-width: 600px; }
+th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+th { background: var(--primary); color: white; }
+
+/* Responsive Mobile */
+@media (max-width: 1024px) {
+    .main-layout { flex-direction: column; }
+    .chart-section { order: -1; width: 100%; box-sizing: border-box; }
+    .table-section { width: 100%; overflow-x: auto; }
+    .header-pro { flex-direction: column; text-align: center; }
+}
+
+.btn { border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; padding: 0 20px; }
+.btn-pdf { background: var(--danger); }
+.btn-theme { background: var(--primary); }
+.btn-backup { background: #3498db; }
+
+/* Empêche le graphique de flotter lors de l'export */
+canvas {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* Optimisation spécifique pour le PDF */
+@media print {
+    /* Cache les éléments inutiles */
+    .toolbar, .main-actions, .btn, .config-inputs, .legal-notice {
+        display: none !important;
     }
 
-    if (logo && logo.src) {
-        const img = document.getElementById('logo-img');
-        img.src = logo.src;
-        img.style.display = "block";
+    /* Force le conteneur à utiliser toute la page */
+    .container {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
     }
 
-    let html = "";
-    let netArray = [];
-    let cumulCA = 0;
-    let tCA = 0, tTVA = 0, tURSSAF = 0, tFrais = 0, tNet = 0;
-
-    for (let i = 0; i < 12; i++) {
-        const row = await new Promise(r => financeStore.get(i).onsuccess = e => r(e.target.result)) || { ca: 0, frais: 0 };
-        let tvaMois = isTvaForced ? row.ca * 0.20 : (cumulCA > 36800 ? row.ca * 0.20 : (cumulCA + row.ca > 36800 ? (cumulCA + row.ca - 36800) * 0.20 : 0));
-        cumulCA += row.ca;
-        let urssaf = (row.ca - tvaMois) * 0.211;
-        let net = row.ca - tvaMois - urssaf - row.frais;
-        
-        tCA += row.ca; tTVA += tvaMois; tURSSAF += urssaf; tFrais += row.frais; tNet += net;
-        netArray.push(net.toFixed(2));
-
-        html += `<tr>
-            <td>${moisLabels[i]}</td>
-            <td><input type="number" value="${row.ca}" onchange="updateEntry(${i}, this.value, ${row.frais})"></td>
-            <td>${tvaMois.toFixed(2)} €</td>
-            <td>${urssaf.toFixed(2)} €</td>
-            <td><input type="number" value="${row.frais}" onchange="updateEntry(${i}, ${row.ca}, this.value)"></td>
-            <td style="font-weight:bold; color:#27ae60">${net.toFixed(2)} €</td>
-        </tr>`;
+    /* Le tableau reste sur la première page */
+    .table-section {
+        width: 100% !important;
+        page-break-after: always; /* Force la fin de la page après le tableau */
     }
 
-    document.getElementById('tbody').innerHTML = html;
-    document.getElementById('tfoot').innerHTML = `<tr style="background:rgba(0,0,0,0.05); font-weight:bold;"><td>TOTAL ANNUEL</td><td>${tCA.toFixed(2)} €</td><td>${tTVA.toFixed(2)} €</td><td>${tURSSAF.toFixed(2)} €</td><td>${tFrais.toFixed(2)} €</td><td>${tNet.toFixed(2)} €</td></tr>`;
-    drawChart(netArray);
-}
+    /* Le graphique commence obligatoirement sur une nouvelle page */
+    .chart-section {
+        display: block !important;
+        width: 100% !important;
+        padding-top: 50px !important;
+    }
 
-// 3. Fonctions des boutons
-function updateEntry(id, ca, frais) {
-    const tx = db.transaction("finance", "readwrite");
-    tx.objectStore("finance").put({ id, ca: parseFloat(ca) || 0, frais: parseFloat(frais) || 0 });
-    tx.oncomplete = () => renderApp();
-}
-
-function saveConfig() {
-    const name = document.getElementById('inName').value;
-    const siret = document.getElementById('inSiret').value;
-    const tvaForced = document.getElementById('tvaForce').checked;
-    const tx = db.transaction("settings", "readwrite");
-    tx.objectStore("settings").put({ id: "config", name, siret, tvaForced });
-    tx.oncomplete = () => renderApp();
-}
-
-function saveLogo(input) {
-    if (!input.files[0]) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-        const tx = db.transaction("settings", "readwrite");
-        tx.objectStore("settings").put({ id: "logo", src: e.target.result });
-        tx.oncomplete = () => renderApp();
-    };
-    reader.readAsDataURL(input.files[0]);
-}
-
-function toggleTheme() {
-    const current = document.body.getAttribute('data-theme');
-    document.body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-}
-
-function exporterPDF() {
-    const element = document.getElementById('app-body');
-    
-    // Création du style correcteur
-    const style = document.createElement('style');
-    style.innerHTML = `
-        /* On force la structure à s'empiler verticalement */
-        .main-layout { 
-            display: flex !important; 
-            flex-direction: column !important; 
-            align-items: center !important;
-        }
-        
-        /* On s'assure que les deux sections prennent toute la largeur */
-        .table-section, .chart-section { 
-            width: 100% !important; 
-            max-width: 100% !important;
-            margin: 0 !important;
-            padding: 10px 0 !important;
-        }
-
-        /* Saut de page automatique pour éviter de couper le graphique */
-        .chart-section { 
-            page-break-before: always !important; 
-        }
-
-        /* On cache les boutons et réglages sur le PDF */
-        .toolbar, .main-actions, .btn, .config-inputs { 
-            display: none !important; 
-        }
-
-        /* On ajuste la taille du tableau pour qu'il ne déborde pas à droite */
-        table { 
-            width: 100% !important; 
-            font-size: 10px !important; 
-        }
-    `;
-    document.head.appendChild(style);
-
-    const opt = {
-        margin: [10, 5],
-        filename: 'Ma_Tresorerie_Rapport.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    html2pdf().set(opt).from(element).save().then(() => {
-        style.remove(); // On retire le style après l'export pour retrouver l'affichage normal
-    });
-}
-
-async function exportData() {
-    const tx = db.transaction(["finance", "settings"], "readonly");
-    const data = {
-        finance: await new Promise(r => tx.objectStore("finance").getAll().onsuccess = e => r(e.target.result)),
-        settings: await new Promise(r => tx.objectStore("settings").getAll().onsuccess = e => r(e.target.result))
-    };
-    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `Backup_Expert.json`;
-    a.click();
-}
-
-function importData(input) {
-    const reader = new FileReader();
-    reader.onload = async e => {
-        const data = JSON.parse(e.target.result);
-        const tx = db.transaction(["finance", "settings"], "readwrite");
-        if(data.finance) data.finance.forEach(row => tx.objectStore("finance").put(row));
-        if(data.settings) data.settings.forEach(row => tx.objectStore("settings").put(row));
-        tx.oncomplete = () => { renderApp(); alert("Données importées !"); };
-    };
-    reader.readAsText(input.files[0]);
-}
-
-function drawChart(data) {
-    const ctx = document.getElementById('mainChart').getContext('2d');
-    if (window.chart) window.chart.destroy();
-    window.chart = new Chart(ctx, {
-        type: 'line',
-        data: { labels: moisLabels.map(m => m.substring(0,3)), datasets: [{ label: 'Bénéfice Net (€)', data: data, borderColor: '#27ae60', backgroundColor: 'rgba(39,174,96,0.1)', fill: true, tension: 0.3 }] },
-        options: { responsive: true, maintainAspectRatio: false }
-    });
+    /* Empêche les coupures de texte moches */
+    tr, td, th {
+        page-break-inside: avoid !important;
+    }
 }
