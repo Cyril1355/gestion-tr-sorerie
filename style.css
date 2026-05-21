@@ -1,152 +1,100 @@
-/* --- Variables & Thèmes --- */
 :root {
-    --bg-color: #f8f9fa;
-    --container-bg: #ffffff;
-    --text-color: #2c3e50;
-    --border-color: #e2e8f0;
-    --btn-shadow: rgba(0, 0, 0, 0.05);
+    --bg: #f4f7f6; --text: #2c3e50; --card: #ffffff;
+    --primary: #34495e; --success: #27ae60; --danger: #e74c3c;
 }
 
 [data-theme="dark"] {
-    --bg-color: #1a1a1a;
-    --container-bg: #2d2d2d;
-    --text-color: #f5f6fa;
-    --border-color: #404040;
+    --bg: #1a1a1a; --text: #ecf0f1; --card: #2c2c2c;
 }
 
-/* --- Styles Généraux --- */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    margin: 0;
-    padding: 20px;
-    transition: background-color 0.3s, color 0.3s;
+html, body {
+    margin: 0; padding: 0; width: 100%; min-height: 100vh;
+    background: var(--bg); font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-.container {
-    max-width: 1550px;
-    margin: 0 auto;
-    background: var(--container-bg);
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+.container { 
+    width: 95%; max-width: 1400px; margin: 20px auto; 
+    background: var(--card); padding: 20px; border-radius: 12px; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); box-sizing: border-box;
 }
 
-/* --- Header & Toolbar --- */
-.header-pro {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 15px;
-    margin-bottom: 25px;
+.header-pro { 
+    display: flex; justify-content: space-between; align-items: center; 
+    border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px;
+    flex-wrap: wrap; gap: 10px;
 }
 
-.brand h1 { margin: 0; font-size: 22px; color: var(--text-color); }
-.brand p { margin: 5px 0 0 0; color: #7f8c8d; font-size: 14px; }
-.toolbar { display: flex; gap: 10px; align-items: center; }
-
-/* --- Zone Logo Cliquable --- */
-.logo-area {
-    margin-bottom: 10px;
+.toolbar { 
+    display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; 
+    background: rgba(0,0,0,0.03); padding: 15px; border-radius: 8px;
 }
 
-.logo-label {
-    cursor: pointer;
-    display: inline-block;
-    transition: opacity 0.2s;
+.toolbar input, .btn, .tva-label { min-height: 44px; box-sizing: border-box; }
+
+.main-layout { 
+    display: flex; gap: 25px; align-items: flex-start; width: 100%; 
 }
 
-.logo-label:hover {
-    opacity: 0.8;
+.table-section { flex: 2; min-width: 0; }
+
+.chart-section { 
+    flex: 1; background: #fff; padding: 15px; border-radius: 8px; 
+    border: 1px solid #eee; min-height: 350px; position: relative;
 }
 
-#company-logo {
-    max-height: 60px;
-    border-radius: 4px;
-    display: block;
+table { width: 100%; border-collapse: collapse; min-width: 600px; }
+th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+th { background: var(--primary); color: white; }
+
+/* Responsive Mobile */
+@media (max-width: 1024px) {
+    .main-layout { flex-direction: column; }
+    .chart-section { order: -1; width: 100%; box-sizing: border-box; }
+    .table-section { width: 100%; overflow-x: auto; }
+    .header-pro { flex-direction: column; text-align: center; }
 }
 
-/* --- Boutons Stylisés --- */
-.btn {
-    padding: 10px 16px;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    color: white;
-    font-size: 13px;
-    box-shadow: 0 2px 4px var(--btn-shadow);
-}
-.btn:active { transform: scale(0.98); }
-.btn-theme { background: #f39c12; }
-.btn-theme:hover { background: #d35400; }
-.btn-pdf { background: #e74c3c; }
-.btn-pdf:hover { background: #c0392b; }
-.btn-backup { background: #2ecc71; }
-.btn-backup:hover { background: #27ae60; }
+.btn { border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; padding: 0 20px; }
+.btn-pdf { background: var(--danger); }
+.btn-theme { background: var(--primary); }
+.btn-backup { background: #3498db; }
 
-/* --- Layout Principal (Côte à côte) --- */
-.main-layout {
-    display: flex;
-    flex-direction: row;
-    gap: 25px;
-    align-items: flex-start;
-    margin-top: 20px;
+/* Empêche le graphique de flotter lors de l'export */
+canvas {
+    max-width: 100% !important;
+    height: auto !important;
 }
 
-.table-section {
-    flex: 65;
-    overflow-x: auto;
-}
+/* Optimisation spécifique pour le PDF */
+@media print {
+    /* Cache les éléments inutiles */
+    .toolbar, .main-actions, .btn, .config-inputs, .legal-notice {
+        display: none !important;
+    }
 
-.chart-section {
-    flex: 35;
-    background: var(--container-bg);
-    border: 1px solid var(--border-color);
-    padding: 15px;
-    border-radius: 8px;
-    height: 480px;
-    position: relative;
-    box-sizing: border-box;
-}
+    /* Force le conteneur à utiliser toute la page */
+    .container {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+    }
 
-/* --- Styles du Tableau --- */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
+    /* Le tableau reste sur la première page */
+    .table-section {
+        width: 100% !important;
+        page-break-after: always; /* Force la fin de la page après le tableau */
+    }
 
-th {
-    background-color: #34495e;
-    color: white;
-    padding: 12px 8px;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
+    /* Le graphique commence obligatoirement sur une nouvelle page */
+    .chart-section {
+        display: block !important;
+        width: 100% !important;
+        padding-top: 50px !important;
+    }
 
-[data-theme="dark"] th { background-color: #111; }
-
-td {
-    padding: 10px 8px;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 13px;
-}
-
-input[type="number"] {
-    width: 85px;
-    padding: 6px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background: var(--container-bg);
-    color: var(--text-color);
-    font-weight: 500;
-}
-
-.total-row {
-    font-weight: bold;
-    background-color: rgba(52, 152, 219, 0.1);
+    /* Empêche les coupures de texte moches */
+    tr, td, th {
+        page-break-inside: avoid !important;
+    }
 }
