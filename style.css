@@ -1,11 +1,8 @@
-/* --- Variables & Thèmes --- */
 :root {
     --bg-color: #f8f9fa;
     --container-bg: #ffffff;
     --text-color: #2c3e50;
     --border-color: #e2e8f0;
-    --primary-color: #3498db;
-    --btn-shadow: rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="dark"] {
@@ -13,135 +10,66 @@
     --container-bg: #2d2d2d;
     --text-color: #f5f6fa;
     --border-color: #404040;
-    --primary-color: #2980b9;
 }
 
-/* --- Styles Généraux --- */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
     padding: 20px;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background 0.3s, color 0.3s;
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
     background: var(--container-bg);
     padding: 25px;
-    border-radius: 12px;
+    border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* --- Header & Toolbar --- */
 .header-pro {
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid var(--border-color);
-    padding-bottom: 20px;
+    padding-bottom: 15px;
     margin-bottom: 25px;
 }
 
-.brand h1 {
-    margin: 0 0 5px 0;
-    font-size: 24px;
-    color: var(--text-color);
-}
+.brand h1 { margin: 0; font-size: 22px; }
+.brand p { margin: 5px 0 0 0; color: #7f8c8d; font-size: 14px; }
+.toolbar { display: flex; gap: 10px; }
 
-.brand p {
-    margin: 0;
-    font-size: 14px;
-    color: #7f8c8d;
-}
-
-.toolbar {
-    display: flex;
-    gap: 10px;
-}
-
-/* --- Boutons --- */
 .btn {
-    padding: 10px 16px;
+    padding: 8px 14px;
     border: none;
-    border-radius: 6px;
+    border-radius: 4px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    box-shadow: 0 2px 4px var(--btn-shadow);
     color: white;
 }
 
-.btn:active { transform: scale(0.98); }
 .btn-theme { background: #f39c12; }
 .btn-pdf { background: #e74c3c; }
 .btn-backup { background: #2ecc71; }
 
-/* --- Layout Principal --- */
-.main-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-/* --- Tableaux et Formulaires --- */
-.table-section {
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-}
-
-th {
-    background-color: #34495e;
-    color: white;
-    padding: 12px 10px;
-    font-size: 13px;
-    text-transform: uppercase;
-}
-
-[data-theme="dark"] th {
-    background-color: #111;
-}
-
-td {
-    padding: 10px;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 14px;
-}
+.main-layout { display: flex; flex-direction: column; gap: 30px; }
+table { width: 100%; border-collapse: collapse; }
+th { background-color: #34495e; color: white; padding: 12px; font-size: 14px; }
+[data-theme="dark"] th { background-color: #111; }
+td { padding: 10px; border-bottom: 1px solid var(--border-color); }
 
 input[type="number"] {
-    width: 90px;
-    padding: 6px 8px;
+    width: 100px;
+    padding: 6px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
     background: var(--container-bg);
     color: var(--text-color);
-    font-weight: 500;
 }
 
-/* --- Lignes de Calculs Spécifiques --- */
-.total-row {
-    font-weight: bold;
-    background-color: rgba(52, 152, 219, 0.1);
-}
-
-.tax-row td, .final-row td {
-    padding: 12px 10px;
-    border-top: 1px solid var(--border-color);
-}
-
-/* --- Section Graphique --- */
-.chart-section {
-    background: var(--container-bg);
-    border: 1px solid var(--border-color);
-    padding: 20px;
-    border-radius: 8px;
-    height: 380px;
-    position: relative;
-}
+.total-row { font-weight: bold; background-color: rgba(52, 152, 219, 0.1); }
+.chart-section { height: 350px; position: relative; }
