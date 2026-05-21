@@ -9,11 +9,15 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body id="app-body">
-    <div class="container">
+    <div class="container" id="pdf-content">
         <header class="header-pro">
             <div class="brand">
-                <h1>Mon Dashboard Trésorerie</h1>
-                <p>Suivi d'activité et rentabilité en temps réel</p>
+                <div class="logo-area">
+                    <img src="logo-entreprise.png" alt="Logo Entreprise" id="company-logo" style="max-height: 60px; margin-bottom: 10px;" onerror="this.style.display='none'">
+                </div>
+                <h1 contenteditable="true" id="company-name">Nom de l'Entreprise</h1>
+                <p>SIRET : <span contenteditable="true" id="company-siret">000 000 000 00000</span></p>
+                <p class="subtitle">Suivi d'activité et rentabilité en temps réel</p>
             </div>
             <div class="toolbar">
                 <button onclick="toggleTheme()" class="btn btn-theme">Mode Sombre</button>
