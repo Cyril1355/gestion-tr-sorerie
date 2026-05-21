@@ -158,29 +158,27 @@ function mettreAJourGraphique() {
 }
 
 function exporterPDF() {
-    const element = document.getElementById('pdf-content');
+    const element = document.getElementById('app-body');
     const style = document.createElement('style');
-    style.id = 'pdf-style-override';
+    style.id = 'pdf-override-style';
     style.innerHTML = `
-        body { padding: 0 !important; background: #fff !important; color: #000 !important; }
-        .container { box-shadow: none !important; padding: 5px !important; max-width: 100% !important; }
-        .toolbar { display: none !important; }
-        .main-layout { display: flex !important; flex-direction: row !important; gap: 15px !important; }
-        .table-section { flex: 65 !important; display: block !important; }
-        .chart-section { flex: 35 !important; height: 440px !important; border: 1px solid #ccc !important; display: block !important; }
-        table { width: 100% !important; font-size: 11px !important; }
-        th { background-color: #34495e !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        td { padding: 8px 5px !important; }
-        input[type="number"] { border: none !important; background: transparent !important; width: 75px !important; color: #000 !important; }
+        .container { width: 100% !important; margin: 0 !important; padding: 0 !important; }
+        .main-layout { display: flex !important; flex-direction: column !important; }
+        .header-pro h1 { font-size: 16px !important; margin: 0 !important; }
+        .brand img { max-height: 40px !important; }
+        table { width: 100% !important; font-size: 9px !important; }
+        th, td { padding: 4px 2px !important; }
+        .chart-section { page-break-before: always !important; width: 100% !important; padding-top: 20px !important; height: 400px !important; }
+        .toolbar, .btn { display: none !important; }
     `;
     document.head.appendChild(style);
 
     const opt = {
-        margin: [8, 8],
-        filename: 'Dashboard_Tresorerie.pdf',
+        margin: [10, 10],
+        filename: 'Reporting_Kiaelle_SARL.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     html2pdf().set(opt).from(element).save().then(() => {
