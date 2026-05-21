@@ -1,4 +1,4 @@
-/* --- Variables & Thèmes (Gestion des Couleurs) --- */
+/* --- Variables & Thèmes --- */
 :root {
     --bg-color: #f8f9fa;
     --container-bg: #ffffff;
@@ -25,7 +25,7 @@ body {
 }
 
 .container {
-    max-width: 1500px;
+    max-width: 1550px;
     margin: 0 auto;
     background: var(--container-bg);
     padding: 25px;
@@ -33,7 +33,7 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* --- Header & Toolbar (Boutons en haut) --- */
+/* --- Header & Toolbar --- */
 .header-pro {
     display: flex;
     justify-content: space-between;
@@ -43,22 +43,9 @@ body {
     margin-bottom: 25px;
 }
 
-.brand h1 { 
-    margin: 0; 
-    font-size: 22px; 
-}
-
-.brand p { 
-    margin: 5px 0 0 0; 
-    color: #7f8c8d; 
-    font-size: 14px; 
-}
-
-.toolbar { 
-    display: flex; 
-    gap: 10px; 
-    align-items: center;
-}
+.brand h1 { margin: 0; font-size: 22px; color: var(--text-color); }
+.brand p { margin: 5px 0 0 0; color: #7f8c8d; font-size: 14px; }
+.toolbar { display: flex; gap: 10px; align-items: center; }
 
 /* --- Boutons Stylisés --- */
 .btn {
@@ -72,43 +59,35 @@ body {
     font-size: 13px;
     box-shadow: 0 2px 4px var(--btn-shadow);
 }
-
-.btn:active { 
-    transform: scale(0.98); 
-}
-
+.btn:active { transform: scale(0.98); }
 .btn-theme { background: #f39c12; }
 .btn-theme:hover { background: #d35400; }
-
 .btn-pdf { background: #e74c3c; }
 .btn-pdf:hover { background: #c0392b; }
-
 .btn-backup { background: #2ecc71; }
 .btn-backup:hover { background: #27ae60; }
 
-/* --- Layout Principal (Mise en page côte à côte) --- */
+/* --- Layout Principal (Côte à côte) --- */
 .main-layout {
     display: flex;
-    flex-direction: row; /* Aligne le tableau et le graphique sur la même ligne */
+    flex-direction: row;
     gap: 25px;
     align-items: flex-start;
     margin-top: 20px;
 }
 
-/* --- Section Tableau (Gauche - 65%) --- */
 .table-section {
     flex: 65;
     overflow-x: auto;
 }
 
-/* --- Section Graphique (Droite - 35%) --- */
 .chart-section {
     flex: 35;
     background: var(--container-bg);
     border: 1px solid var(--border-color);
     padding: 15px;
     border-radius: 8px;
-    height: 490px; /* S'aligne parfaitement avec la hauteur du tableau */
+    height: 480px;
     position: relative;
     box-sizing: border-box;
 }
@@ -128,9 +107,7 @@ th {
     letter-spacing: 0.5px;
 }
 
-[data-theme="dark"] th {
-    background-color: #111;
-}
+[data-theme="dark"] th { background-color: #111; }
 
 td {
     padding: 10px 8px;
