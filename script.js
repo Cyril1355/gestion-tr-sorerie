@@ -142,24 +142,39 @@ function mettreAJourGraphique() {
 }
 
 function exporterPDF() {
-    const element = document.getElementById('app-body');
+    // Cibler uniquement le conteneur principal
+    const element = document.getElementById('pdf-content');
+    
+    // Injecter un style d'impression temporaire et propre pour le format côte à côte
     const style = document.createElement('style');
+    style.id = 'pdf-style-override';
     style.innerHTML = `
-        .container { width: 100% !important; margin: 0 !important; padding: 0 !important; }
-        .main-layout { display: flex !important; flex-direction: column !important; }
-        table { width: 100% !important; font-size: 10px !important; }
-        .chart-section { page-break-before: always !important; width: 100% !important; height: 400px !important; }
-        .toolbar, .btn { display: none !important; }
+        body { padding: 0 !important; background: #fff !important; color: #000 !important; }
+        .container { box-shadow: none !important; padding: 10px !important; max-width: 100% !important; }
+        .toolbar { display: none !important; }
+        .main-layout { display: flex !important; flex-direction: row !important; gap: 15px !important; }
+        .table-section { flex: 60 !important; }
+        .chart-section { flex: 40 !important; height: 380px !important; border: 1px solid #ccc !important; }
+        table { font-size: 11px !important; }
+        th { background-color: #34495e !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        td { padding: 6px 4px !important; }
+        input[type="number"] { border: none !important; background: transparent !important; width: 65px !important; }
     `;
     document.head.appendChild(style);
 
     const opt = {
-        margin: [10, 10],
-        filename: 'Mon_Reporting_Tresorerie.pdf',
+        margin: [8, 8],
+        filename: 'Dashboard_Tresorerie.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } // Mode paysage idéal pour le côte à côte
     };
+
+    // Lancement de la capture de l'élément complet
+    html2pdf().set(opt).from(element).save().then(() => {
+        style.remove(); // Suppression du style temporaire après l'export
+    });
+}
 
     html2pdf().set(opt).from(element).save().then(() => { style.remove(); });
 }
