@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ma Trésorerie SARL - Kiaelle</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -12,9 +12,9 @@
     <div class="container">
         <header class="header-pro">
             <div class="brand">
-                <img src="logo-kiaelle.jpg" alt="Logo Kiaelle" style="max-height: 70px;" onerror="this.style.display='none'">
+                <img src="logo-kiaelle.png" alt="Logo Kiaelle" style="max-height: 70px;" onerror="this.style.display='none'">
                 <h1>Ma Trésorerie SARL</h1>
-                <p>Structure : <strong>Kiaelle</strong> | Régime : <strong>TNS</strong></p>
+                <p>Structure : <strong>Kiaelle</strong> | Régime : <strong>SARL (2 Gérantes TNS)</strong></p>
             </div>
             <div class="toolbar">
                 <button onclick="toggleTheme()" class="btn btn-theme">Mode Sombre</button>
@@ -33,8 +33,10 @@
                             <th>Mois</th>
                             <th>CA Brut (€)</th>
                             <th>TVA (20%)</th>
+                            <th>Rémunérations (€)</th>
                             <th>Cotisations TNS (€)</th>
-                            <th>Frais (€)</th>
+                            <th>Frais Fixes (€)</th>
+                            <th>Factures / Var. (€)</th>
                             <th>Bénéfice Net</th>
                         </tr>
                     </thead>
@@ -44,9 +46,19 @@
                             <td>TOTAL ANNUEL</td>
                             <td id="total-ca">0.00 €</td>
                             <td id="total-tva">0.00 €</td>
+                            <td id="total-rem">0.00 €</td>
                             <td id="total-tns">0.00 €</td>
-                            <td id="total-frais">0.00 €</td>
+                            <td id="total-fixes">0.00 €</td>
+                            <td id="total-var">0.00 €</td>
                             <td id="total-net">0.00 €</td>
+                        </tr>
+                        <tr class="tax-row" style="background: #fdf2e9; font-weight: bold; color: #d35400;">
+                            <td colspan="7" style="text-align: right;">ESTIMATION IMPÔT SUR LES SOCIÉTÉS (IS 15%) :</td>
+                            <td id="total-is">0.00 €</td>
+                        </tr>
+                        <tr class="final-row" style="background: #e8f8f5; font-weight: bold; font-size: 1.1em; color: #117a65;">
+                            <td colspan="7" style="text-align: right;">SOLDE NET APRÈS IS :</td>
+                            <td id="solde-apres-is">0.00 €</td>
                         </tr>
                     </tfoot>
                 </table>
