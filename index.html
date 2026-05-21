@@ -1,100 +1,84 @@
-:root {
-    --bg: #f4f7f6; --text: #2c3e50; --card: #ffffff;
-    --primary: #34495e; --success: #27ae60; --danger: #e74c3c;
-}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Expert Trésorerie - Dashboard Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body id="app-body">
 
-[data-theme="dark"] {
-    --bg: #1a1a1a; --text: #ecf0f1; --card: #2c2c2c;
-}
+    <div class="container">
+        <header class="header-pro">
+            <div class="logo-area" style="display: flex; align-items: center; gap: 15px;">
+                <img id="logo-img" src="" alt="Logo" style="display:none; max-height: 50px; border-radius: 4px;">
+                <div>
+                    <h1 id="name-display" style="margin:0; font-size: 1.5rem;">Ma Trésorerie</h1>
+                    <small id="siret-display" style="color: #666;">SIRET : -</small>
+                </div>
+            </div>
+            <div class="main-actions">
+                <button class="btn btn-theme" onclick="toggleTheme()" title="Changer de mode">🌓 Mode</button>
+                <button class="btn btn-pdf" onclick="exporterPDF()">Rapport PDF</button>
+            </div>
+        </header>
 
-html, body {
-    margin: 0; padding: 0; width: 100%; min-height: 100vh;
-    background: var(--bg); font-family: 'Segoe UI', system-ui, sans-serif;
-}
+        <section class="toolbar">
+            <div class="config-inputs" style="display: flex; gap: 10px; flex-wrap: wrap; flex: 2;">
+                <input type="text" id="inName" placeholder="Nom Entreprise">
+                <input type="text" id="inSiret" placeholder="SIRET">
+                <label class="tva-label" style="display: flex; align-items: center; gap: 5px; background: white; padding: 0 10px; border: 1px solid #ccc; border-radius: 6px;">
+                    <input type="checkbox" id="tvaForce"> TVA dès 1€
+                </label>
+                <button class="btn" onclick="saveConfig()" style="background: #27ae60;">Enregistrer</button>
+            </div>
+            
+            <div class="data-actions" style="display: flex; gap: 10px; flex-wrap: wrap; flex: 1; justify-content: flex-end;">
+                <input type="file" id="logoInput" onchange="saveLogo(this)" style="display:none">
+                <button class="btn" onclick="document.getElementById('logoInput').click()" style="background: #95a5a6;">Logo</button>
+                
+                <button class="btn btn-backup" onclick="exportData()">💾 Backup</button>
+                <input type="file" id="importInput" onchange="importData(this)" style="display:none">
+                <button class="btn" onclick="document.getElementById('importInput').click()" style="background: #9b59b6;">📂 Importer</button>
+            </div>
+        </section>
+        
 
-.container { 
-    width: 95%; max-width: 1400px; margin: 20px auto; 
-    background: var(--card); padding: 20px; border-radius: 12px; 
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08); box-sizing: border-box;
-}
+        <main class="main-layout">
+            
+            <section class="table-section">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mois</th>
+                            <th>CA Brut (€)</th>
+                            <th>TVA (20%)</th>
+                            <th>URSSAF (21.1%)</th>
+                            <th>Frais (€)</th>
+                            <th>Net Réel</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        </tbody>
+                    <tfoot id="tfoot">
+                        </tfoot>
+                </table>
+            </section>
 
-.header-pro { 
-    display: flex; justify-content: space-between; align-items: center; 
-    border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px;
-    flex-wrap: wrap; gap: 10px;
-}
+            <section class="chart-section">
+                <canvas id="mainChart"></canvas>
+            </section>
 
-.toolbar { 
-    display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; 
-    background: rgba(0,0,0,0.03); padding: 15px; border-radius: 8px;
-}
+        </main>
 
-.toolbar input, .btn, .tva-label { min-height: 44px; box-sizing: border-box; }
+        <footer class="legal-notice" style="margin-top: 40px; font-size: 0.8rem; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 20px;">
+            <p><strong>Sécurité & Confidentialité :</strong></p>
+            <p>Cet outil fonctionne en local. Aucune donnée n'est envoyée sur un serveur tiers. Pensez à utiliser la fonction <strong>Backup</strong> régulièrement pour ne pas perdre vos saisies.</p>
+        </footer>
+    </div>
 
-.main-layout { 
-    display: flex; gap: 25px; align-items: flex-start; width: 100%; 
-}
-
-.table-section { flex: 2; min-width: 0; }
-
-.chart-section { 
-    flex: 1; background: #fff; padding: 15px; border-radius: 8px; 
-    border: 1px solid #eee; min-height: 350px; position: relative;
-}
-
-table { width: 100%; border-collapse: collapse; min-width: 600px; }
-th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
-th { background: var(--primary); color: white; }
-
-/* Responsive Mobile */
-@media (max-width: 1024px) {
-    .main-layout { flex-direction: column; }
-    .chart-section { order: -1; width: 100%; box-sizing: border-box; }
-    .table-section { width: 100%; overflow-x: auto; }
-    .header-pro { flex-direction: column; text-align: center; }
-}
-
-.btn { border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; padding: 0 20px; }
-.btn-pdf { background: var(--danger); }
-.btn-theme { background: var(--primary); }
-.btn-backup { background: #3498db; }
-
-/* Empêche le graphique de flotter lors de l'export */
-canvas {
-    max-width: 100% !important;
-    height: auto !important;
-}
-
-/* Optimisation spécifique pour le PDF */
-@media print {
-    /* Cache les éléments inutiles */
-    .toolbar, .main-actions, .btn, .config-inputs, .legal-notice {
-        display: none !important;
-    }
-
-    /* Force le conteneur à utiliser toute la page */
-    .container {
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-    }
-
-    /* Le tableau reste sur la première page */
-    .table-section {
-        width: 100% !important;
-        page-break-after: always; /* Force la fin de la page après le tableau */
-    }
-
-    /* Le graphique commence obligatoirement sur une nouvelle page */
-    .chart-section {
-        display: block !important;
-        width: 100% !important;
-        padding-top: 50px !important;
-    }
-
-    /* Empêche les coupures de texte moches */
-    tr, td, th {
-        page-break-inside: avoid !important;
-    }
-}
+    <script src="script.js"></script>
+</body>
+</html>
