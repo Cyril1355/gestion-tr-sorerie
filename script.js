@@ -7,7 +7,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if(localStorage.getItem('theme') === 'dark') {
         document.body.setAttribute('data-theme', 'dark');
     }
+    // Restaurer le logo si déjà sauvegardé localement
+    const savedLogo = localStorage.getItem('custom-logo');
+    if (savedLogo) {
+        document.getElementById('company-logo').src = savedLogo;
+    }
 });
+
+function chargerLogo(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('company-logo').src = e.target.result;
+            localStorage.setItem('custom-logo', e.target.result); // Sauvegarde locale de l'image
+        }
+        reader.readAsDataURL(file);
+    }
+}
 
 function initialiserTableau() {
     const tbody = document.getElementById('table-body');
