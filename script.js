@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if(localStorage.getItem('theme') === 'dark') {
         document.body.setAttribute('data-theme', 'dark');
     }
-    // Restaurer le logo si déjà sauvegardé localement
     const savedLogo = localStorage.getItem('custom-logo');
     if (savedLogo) {
         document.getElementById('company-logo').src = savedLogo;
@@ -20,7 +19,7 @@ function chargerLogo(event) {
         const reader = new FileReader();
         reader.onload = function(e) {
             document.getElementById('company-logo').src = e.target.result;
-            localStorage.setItem('custom-logo', e.target.result); // Sauvegarde locale de l'image
+            localStorage.setItem('custom-logo', e.target.result);
         }
         reader.readAsDataURL(file);
     }
@@ -47,13 +46,16 @@ function initialiserTableau() {
 
 function calculerLigne(row) {
     const caBrut = parseFloat(row.querySelector('.ca-brut').value) || 0;
+    
+    // La TVA à 20% s'applique automatiquement dès le premier euro de revenu
     const tva = caBrut * 0.20;
-    const urssaf = caBrut * 0.211;
+    const urssaf = caBrut * 0.211; 
     const frais = parseFloat(row.querySelector('.frais-input').value) || 0;
 
     row.querySelector('.tva').textContent = tva.toFixed(2) + " €";
     row.querySelector('.urssaf').textContent = urssaf.toFixed(2) + " €";
     
+    // Formule : CA Brut - TVA - Cotisations - Frais
     const netReel = caBrut - tva - urssaf - frais;
     const netElt = row.querySelector('.net-reel');
     netElt.textContent = netReel.toFixed(2) + " €";
@@ -158,27 +160,29 @@ function mettreAJourGraphique() {
 }
 
 function exporterPDF() {
-    const element = document.getElementById('app-body');
+    const element = document.getElementById('pdf-content');
     const style = document.createElement('style');
-    style.id = 'pdf-override-style';
+    style.id = 'pdf-style-override';
     style.innerHTML = `
-        .container { width: 100% !important; margin: 0 !important; padding: 0 !important; }
-        .main-layout { display: flex !important; flex-direction: column !important; }
-        .header-pro h1 { font-size: 16px !important; margin: 0 !important; }
-        .brand img { max-height: 40px !important; }
-        table { width: 100% !important; font-size: 9px !important; }
-        th, td { padding: 4px 2px !important; }
-        .chart-section { page-break-before: always !important; width: 100% !important; padding-top: 20px !important; height: 400px !important; }
-        .toolbar, .btn { display: none !important; }
+        body { padding: 0 !important; background: #fff !important; color: #000 !important; }
+        .container { box-shadow: none !important; padding: 5px !important; max-width: 100% !important; }
+        .toolbar { display: none !important; }
+        .main-layout { display: flex !important; flex-direction: row !important; gap: 15px !important; }
+        .table-section { flex: 65 !important; display: block !important; }
+        .chart-section { flex: 35 !important; height: 440px !important; border: 1px solid #ccc !important; display: block !important; }
+        table { width: 100% !important; font-size: 11px !important; }
+        th { background-color: #34495e !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        td { padding: 8px 5px !important; }
+        input[type="number"] { border: none !important; background: transparent !important; width: 75px !important; color: #000 !important; }
     `;
     document.head.appendChild(style);
 
     const opt = {
-        margin: [10, 10],
-        filename: 'Reporting_Kiaelle_SARL.pdf',
+        margin: [8, 8],
+        filename: 'Dashboard_Tresorerie.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
     };
 
     html2pdf().set(opt).from(element).save().then(() => {
