@@ -98,3 +98,17 @@ canvas {
         page-break-inside: avoid !important;
     }
 }
+.site-footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    font-size: 13px;
+}
+.site-footer a {
+    color: var(--text-color);
+    text-decoration: none;
+    margin: 0 15px;
+    opacity: 0.7;
+}
+.site-footer a:hover { opacity: 1; text-decoration: underline; }
