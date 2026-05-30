@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentions Légales - Mon Dashboard Trésorerie</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .legal-box { max-width: 800px; margin: 40px auto; padding: 30px; background: var(--container-bg); border-radius: 8px; line-height: 1.6; }
+        h1 { border-bottom: 2px solid #34495e; padding-bottom: 10px; }
+        h2 { margin-top: 25px; color: #34495e; }
+        [data-theme="dark"] h2 { color: #f5f6fa; }
+    </style>
+</head>
+<body>
+    <div class="legal-box">
+        <h1>Mentions Légales</h1>
+        <p>En vigueur au 30 mai 2026.</p>
+
+        <h2>1. Édition du site</h2>
+        <p>Le présent site, accessible à l'URL <strong>[Insérer l'URL de votre site]</strong>, est édité par :<br>
+        <strong>[Votre Nom et Prénom ou Nom de Société]</strong>, résidant au <strong>[Votre Adresse Postale complète]</strong>, de nationalité Française, né(e) le [Votre Date de Naissance] (si particulier).<br>
+        Numéro de SIRET : <strong>[Votre SIRET]</strong>.<br>
+        Directeur de la publication : <strong>[Votre Nom]</strong>.</p>
+
+        <h2>2. Nous contacter</h2>
+        <p>Par téléphone : <strong>[Votre Téléphone]</strong><br>
+        Par email : <strong>[Votre Adresse Email]</strong></p>
+
+        <h2>3. Hébergement</h2>
+        <p>Le Site est hébergé par la société <strong>GitHub Inc.</strong>, situé au 88 Colin P. Kelly Jr. St, San Francisco, CA 94107, États-Unis (Contact : support@github.com).</p>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="index.html" class="btn btn-theme" style="text-decoration:none; display:inline-block;">Retour au Dashboard</a>
+        </div>
+    </div>
+    <script>
+        if(localStorage.getItem('theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
+    </script>
+</body>
+</html>
