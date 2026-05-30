@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditions Générales d'Utilisation - Mon Dashboard Trésorerie</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .legal-box { max-width: 800px; margin: 40px auto; padding: 30px; background: var(--container-bg); border-radius: 8px; line-height: 1.6; }
+        h1 { border-bottom: 2px solid #34495e; padding-bottom: 10px; }
+        h2 { margin-top: 25px; color: #34495e; }
+        [data-theme="dark"] h2 { color: #f5f6fa; }
+    </style>
+</head>
+<body>
+    <div class="legal-box">
+        <h1>Conditions Générales d'Utilisation (CGU)</h1>
+        <p>En vigueur au 30 mai 2026.</p>
+
+        <h2>1. Objet</h2>
+        <p>Les présentes CGU ont pour objet de définir les modalités de mise à disposition et d'utilisation du Dashboard de Gestion de Trésorerie. L'utilisation du site implique l'acceptation pleine et entière des présentes conditions.</p>
+
+        <h2>2. Propriété intellectuelle</h2>
+        <p>L'architecture globale, les codes sources, les graphismes et les scripts de l'application sont la propriété exclusive de l'éditeur du site. Toute reproduction ou copie sans autorisation préalable est interdite.</p>
+
+        <h2>3. Limitation de responsabilité et Garanties</h2>
+        <p>Ce tableau de bord est un <strong>outil d'aide à la décision informatique et de simulation visuelle</strong>. Les calculs automatiques (TVA, IS, Cotisations) sont fournis à titre purement indicatif et informatif.<br><br>
+        L'éditeur ne saurait en aucun cas être tenu responsable :
+        <ul>
+            <li>D'une éventuelle erreur de calcul, de formules ou de décalages fiscaux liés à des évolutions de lois.</li>
+            <li>D'une perte de données (l'application stockant les données localement sur le navigateur de l'utilisateur ou via l'export de fichiers JSON).</li>
+            <li>D'une mauvaise interprétation des résultats entraînant un préjudice financier ou fiscal pour l'entreprise utilisatrice.</li>
+        </ul>
+        L'utilisateur est invité à valider ses chiffres définitifs auprès d'un expert-comptable agréé ou des organismes officiels (URSSAF, Impôts).</p>
+
+        <h2>4. Données personnelles (RGPD)</h2>
+        <p>Ce site s'inscrit dans une démarche de confidentialité totale. **Aucune donnée saisie dans l'outil (chiffre d'affaires, frais, logos, noms) n'est collectée, enregistrée ou transférée vers un serveur externe.** Toutes vos données restent stockées exclusivement dans la mémoire locale de votre propre navigateur internet ou dans le fichier de sauvegarde (Backup) que vous téléchargez.</p>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="index.html" class="btn btn-theme" style="text-decoration:none; display:inline-block;">Retour au Dashboard</a>
+        </div>
+    </div>
+    <script>
+        if(localStorage.getItem('theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
+    </script>
+</body>
+</html>
